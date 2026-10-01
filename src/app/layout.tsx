@@ -41,16 +41,29 @@ export default function RootLayout({
             <p className="text-slate-400 font-mono text-[11px]">
               Next.js 15 App Router • PostgreSQL 16 on Neon Serverless (Singapore) • Strict 3NF/BCNF Schema
             </p>
-            <div className="flex items-center justify-center gap-4 text-[11px] text-slate-400 pt-2 border-t border-slate-100 max-w-md mx-auto">
-              <a href="/docs/db-architecture.html" target="_blank" className="hover:text-emerald-600 transition-colors">
+            <div className="flex items-center justify-center gap-4 text-[11px] text-slate-400 pt-2 border-t border-slate-100 max-w-md mx-auto" suppressHydrationWarning>
+              <a
+                href="/docs/db-architecture.html"
+                target="_blank"
+                suppressHydrationWarning
+                className="hover:text-emerald-600 transition-colors"
+              >
                 ผังฐานข้อมูล (Schema Docs) ↗
               </a>
               <span>•</span>
-              <a href="/admin/orders" className="hover:text-emerald-600 transition-colors">
+              <a
+                href="/admin/orders"
+                suppressHydrationWarning
+                className="hover:text-emerald-600 transition-colors"
+              >
                 ระบบจัดการผู้ดูแลระบบ (Admin)
               </a>
               <span>•</span>
-              <a href="/library" className="hover:text-emerald-600 transition-colors">
+              <a
+                href="/library"
+                suppressHydrationWarning
+                className="hover:text-emerald-600 transition-colors"
+              >
                 คลังหนังสือของฉัน (Library)
               </a>
             </div>

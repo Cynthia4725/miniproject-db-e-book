@@ -174,7 +174,11 @@ export default async function CatalogPage({
                 <span className="inline-block px-2 py-0.5 rounded text-[10px] font-mono font-bold uppercase tracking-wider bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 mb-1.5">
                   Staff Pick · เล่มแนะนำ
                 </span>
-                <Link href={`/books/${staffPick.id}`} className="block hover:text-emerald-300 transition-colors">
+                <Link
+                  href={`/books/${staffPick.id}`}
+                  suppressHydrationWarning
+                  className="block hover:text-emerald-300 transition-colors"
+                >
                   <h3 className="font-bold text-sm text-white line-clamp-1 truncate">
                     {staffPick.title}
                   </h3>
@@ -189,6 +193,7 @@ export default async function CatalogPage({
                   </span>
                   <Link
                     href={`/books/${staffPick.id}`}
+                    suppressHydrationWarning
                     className="px-3 py-1 bg-white hover:bg-slate-100 text-slate-900 text-[11px] font-semibold rounded-lg transition-colors shadow-2xs"
                   >
                     ดูเนื้อหา ↗
@@ -204,11 +209,12 @@ export default async function CatalogPage({
               <p className="font-mono text-[10px] uppercase font-bold text-slate-400 tracking-wider mb-2">
                 หมวดหมู่ยอดนิยม (Trending Topics)
               </p>
-              <div className="flex flex-wrap gap-1.5">
+              <div className="flex flex-wrap gap-1.5" suppressHydrationWarning>
                 {categories.slice(0, 4).map((c) => (
                   <Link
                     key={c.id}
                     href={`/?category=${c.slug}`}
+                    suppressHydrationWarning
                     className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs transition-all ${
                       params.category === c.slug
                         ? 'bg-emerald-600 text-white font-medium'
@@ -224,9 +230,14 @@ export default async function CatalogPage({
               </div>
             </div>
 
-            <div className="mt-3 pt-3 border-t border-slate-100 flex items-center justify-between text-[11px]">
+            <div className="mt-3 pt-3 border-t border-slate-100 flex items-center justify-between text-[11px]" suppressHydrationWarning>
               <span className="text-slate-400">ทั้งหมด {books.length} เล่มพร้อมดาวน์โหลด</span>
-              <a href="/docs/db-architecture.html" target="_blank" className="text-emerald-700 font-semibold hover:underline">
+              <a
+                href="/docs/db-architecture.html"
+                target="_blank"
+                suppressHydrationWarning
+                className="text-emerald-700 font-semibold hover:underline"
+              >
                 ดูแผนผังฐานข้อมูล ↗
               </a>
             </div>
@@ -364,6 +375,7 @@ export default async function CatalogPage({
                   <div className="flex items-center gap-1.5">
                     <Link
                       href={`/books/${book.id}`}
+                      suppressHydrationWarning
                       className="px-2.5 py-1.5 rounded-lg border border-slate-200 hover:border-slate-300 text-slate-700 text-xs font-medium hover:bg-slate-50 transition-colors"
                     >
                       ดูเล่มนี้
@@ -371,6 +383,7 @@ export default async function CatalogPage({
                     <form action={addToCartAction.bind(null, book.id)}>
                       <button
                         type="submit"
+                        suppressHydrationWarning
                         className="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-bold transition-all shadow-xs active:scale-95 flex items-center gap-1"
                         title="เพิ่มลงตะกร้า"
                       >
@@ -398,6 +411,7 @@ export default async function CatalogPage({
           <div className="mt-4">
             <Link
               href="/"
+              suppressHydrationWarning
               className="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white text-xs font-medium rounded-lg inline-block transition-colors"
             >
               กลับสู่รายการหนังสือทั้งหมด
