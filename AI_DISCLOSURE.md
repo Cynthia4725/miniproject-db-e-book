@@ -157,6 +157,32 @@
 - **การตัดสินใจของมนุษย์ (Human Decision)**:
   - ยืนยันความเห็นชอบต่อขอบเขตและ Seams การทดสอบของสเปก
 
+### รอบที่ 13: Tracer-Bullet Ticket Breakdown for Spec-0001 (/to-tickets)
+- **วันที่**: 2026-10-02
+- **โจทย์ที่ป้อนให้ AI**: ย่อยเอกสารข้อกำหนด Spec-0001 (Hybrid Identifier Strategy) ออกเป็นชุดงานย่อยแบบ Tracer-Bullet Tickets ที่มี Blocking Edges ชัดเจน
+- **สิ่งที่ AI นำเสนอ**:
+  - เสนอการซอยงานเป็น 3 Vertical Slices:
+    1. Ticket 01: Order Public UUID Identification & Lookup Slice (ไม่ถูกบล็อก เริ่มได้ทันที)
+    2. Ticket 02: Download Token UUID Generation & Gated Verification Slice (ถูกบล็อกโดย Ticket 01)
+    3. Ticket 03: Public DTO Sanitization & Tamper-Proof Error Handling Slice (ถูกบล็อกโดย Ticket 01 และ 02)
+  - กำหนด Acceptance Criteria พร้อม Checkbox ในแต่ละ Ticket และบันทึกลงใน `.scratch/0001-hybrid-id-strategy/issues/`
+- **การตัดสินใจของมนุษย์ (Human Decision)**:
+  - ตรวจสอบและยืนยันการแบ่ง Tickets และลำดับ Blocking Edges ทั้งหมด
+
+### รอบที่ 14: Implementation & Test-Driven Development (/implement, /tdd)
+- **วันที่**: 2026-10-02
+- **โจทย์ที่ป้อนให้ AI**: ลงมือพัฒนาโค้ดตาม Tickets ของ Spec-0001 ทั้งหมด โดยยึดหลัก TDD (Red-Green-Refactor)
+- **สิ่งที่ AI นำเสนอ**:
+  - พัฒนาโครงสร้าง DDL สมบูรณ์ [src/db/schema.sql](file:///c:/Users/bond/Documents/miniproject-db-e-book/src/db/schema.sql) รองรับ 16 ตารางและ B-Tree Indexes
+  - สร้างโมดูล [src/modules/orders/order.repository.ts](file:///c:/Users/bond/Documents/miniproject-db-e-book/src/modules/orders/order.repository.ts) (Ticket 01) พร้อมชุดทดสอบ TDD 6 เคส ผ่าน 100%
+  - สร้างโมดูล [src/modules/fulfillment/token.repository.ts](file:///c:/Users/bond/Documents/miniproject-db-e-book/src/modules/fulfillment/token.repository.ts) (Ticket 02) พร้อมชุดทดสอบ TDD 7 เคส ผ่าน 100%
+  - สร้างโมดูลความปลอดภัยและ DTO [src/lib/sanitizer.ts](file:///c:/Users/bond/Documents/miniproject-db-e-book/src/lib/sanitizer.ts) (Ticket 03) พร้อมชุดทดสอบ TDD 6 เคส ผ่าน 100%
+  - ตรวจสอบ Typecheck (`tsc --noEmit`) และ Vitest Suite ทั้งหมด 19/19 เคสผ่านฉลุย
+- **การตัดสินใจของมนุษย์ (Human Decision)**:
+  - อนุมัติการรันและยอมรับผลลัพธ์ของโค้ดและการทดสอบทั้งหมด
+
+
+
 
 
 
