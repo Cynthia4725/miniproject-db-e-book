@@ -4,9 +4,9 @@
 
 **Blocked by:** 01: Cart Lifecycle & Digital Idempotency Slice
 
-**Status:** ready-for-agent
+**Status:** completed
 
-- [ ] Deleting a user cascades and deletes their `carts` record and all linked `cart_items`.
-- [ ] Deleting a book from `books` cascades and purges matching records from `cart_items` across all customer carts.
-- [ ] Cart item foreign keys to `carts` and `books` preserve database normalization and prevent orphaned cart rows.
-- [ ] Administrative query retrieves active cart items and books in carts to measure unpurchased demand.
+- [x] Deleting a user cascades and deletes their `carts` record and all linked `cart_items`.
+- [x] Deleting a book from `books` cascades and purges matching records from `cart_items` across all customer carts.
+- [x] Cart item foreign keys to `carts` and `books` preserve database normalization and prevent orphaned cart rows.
+- [x] Administrative query retrieves active cart items and books in carts to measure unpurchased demand.

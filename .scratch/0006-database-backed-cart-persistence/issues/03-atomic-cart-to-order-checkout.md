@@ -4,11 +4,11 @@
 
 **Blocked by:** 01: Cart Lifecycle & Digital Idempotency Slice
 
-**Status:** ready-for-agent
+**Status:** completed
 
-- [ ] Checkout fails with `ValidationError` when attempting to checkout an empty cart.
-- [ ] Checkout reads cart items and snapshots current catalog prices into `order_items.unit_price`.
-- [ ] Checkout creates `orders` record with status `PENDING`, valid public UUID `order_number`, and accurate subtotal and net amounts.
-- [ ] Optional valid coupon discount is computed and recorded in `orders.coupon_id` and `discount_amount`.
-- [ ] Successful checkout completely clears all `cart_items` for the target cart.
-- [ ] Transaction abort or failure rolls back all database modifications, leaving `cart_items` completely intact.
+- [x] Checkout fails with `ValidationError` when attempting to checkout an empty cart.
+- [x] Checkout reads cart items and snapshots current catalog prices into `order_items.unit_price`.
+- [x] Checkout creates `orders` record with status `PENDING`, valid public UUID `order_number`, and accurate subtotal and net amounts.
+- [x] Optional valid coupon discount is computed and recorded in `orders.coupon_id` and `discount_amount`.
+- [x] Successful checkout completely clears all `cart_items` for the target cart.
+- [x] Transaction abort or failure rolls back all database modifications, leaving `cart_items` completely intact.

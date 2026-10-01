@@ -299,3 +299,16 @@
   - สร้างไฟล์ Ticket ทั้ง 3 ฉบับพร้อม Acceptance Criteria ครบถ้วนใน `.scratch/0006-database-backed-cart-persistence/issues/`
 - **การตัดสินใจของมนุษย์ (Human Decision)**:
   - ตรวจสอบและยืนยันการแบ่ง Tickets และลำดับ Blocking Edges ทั้งหมด
+
+### รอบที่ 24: Implementation & Test-Driven Development for Spec-0006 (/implement, /tdd)
+- **วันที่**: 2026-10-02
+- **โจทย์ที่ป้อนให้ AI**: ลงมือพัฒนาโค้ดตาม Tickets ของ Spec-0006 (Database-Backed Cart Persistence Over Client-Side LocalStorage) ทั้ง 3 Tickets โดยยึดหลัก TDD (Red-Green-Refactor)
+- **สิ่งที่ AI นำเสนอ**:
+  - สร้างโมดูล [src/modules/cart/cart.dto.ts](file:///c:/Users/bond/Documents/miniproject-db-e-book/src/modules/cart/cart.dto.ts) และ [src/modules/cart/cart.repository.ts](file:///c:/Users/bond/Documents/miniproject-db-e-book/src/modules/cart/cart.repository.ts):
+    - Ticket 01: เพิ่ม `getOrCreateCart`, `addItem` พร้อมระบบ Digital Idempotency (`UNIQUE (cart_id, book_id)`), `removeItem`, และ `getCartWithItems` ดึงรายการตะกร้าพร้อมราคาปัจจุบัน คำนวณ Subtotal แม่นยำ
+    - Ticket 02: เพิ่ม `deleteUserCascade` และ `deleteBookCascade` พิสูจน์พฤติกรรม `ON DELETE CASCADE` ของตาราง `carts` และ `cart_items` พร้อมเมธอด `getActiveCartDemandStats` สำหรับวัดปริมาณความต้องการสินค้าที่ค้างในตะกร้า
+    - Ticket 03: เพิ่ม `checkout` ดำเนินการย้ายสินค้าจาก `cart_items` ไปยัง `order_items` พร้อมตรึงราคาขายจริง (Frozen Price Snapshot) สร้างเรคอร์ดคำสั่งซื้อ `orders` สถานะ `PENDING` พร้อม Public UUID `order_number` คำนวณคูปองส่วนลด และล้างตะกร้าแบบ Atomic Transaction
+  - เขียนและรันชุดทดสอบ TDD [src/modules/cart/cart.repository.test.ts](file:///c:/Users/bond/Documents/miniproject-db-e-book/src/modules/cart/cart.repository.test.ts) ทั้ง 15 เคสผ่าน 100%
+  - ตรวจสอบความถูกต้องของ Typecheck (`tsc --noEmit`) 0 errors และชุดทดสอบระบบทั้งหมดรวม 98/98 เคสผ่านฉลุย
+- **การตัดสินใจของมนุษย์ (Human Decision)**:
+  - สั่งเริ่มการอิมพลีเมนต์ตามสเปกและยอมรับผลการตรวจสอบการทำงานทั้งหมด

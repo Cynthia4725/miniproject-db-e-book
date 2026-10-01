@@ -4,11 +4,11 @@
 
 **Blocked by:** None (can start immediately)
 
-**Status:** ready-for-agent
+**Status:** completed
 
-- [ ] `getOrCreateCart(userId)` finds existing cart or automatically creates a new row in `carts`.
-- [ ] `addItem(cartId, bookId)` inserts into `cart_items` referencing target book and cart.
-- [ ] Attempting to add an already existing book in the same cart behaves idempotently or rejects duplicate additions without creating multiple rows.
-- [ ] Adding an invalid or non-existent `book_id` fails with `NotFoundError`.
-- [ ] `removeItem(cartId, bookId)` deletes the specific book from `cart_items`.
-- [ ] `getCartWithItems(userId)` returns the active cart, total item count, items array with snapshot prices and book details, and calculated subtotal.
+- [x] `getOrCreateCart(userId)` finds existing cart or automatically creates a new row in `carts`.
+- [x] `addItem(cartId, bookId)` inserts into `cart_items` referencing target book and cart.
+- [x] Attempting to add an already existing book in the same cart behaves idempotently or rejects duplicate additions without creating multiple rows.
+- [x] Adding an invalid or non-existent `book_id` fails with `NotFoundError`.
+- [x] `removeItem(cartId, bookId)` deletes the specific book from `cart_items`.
+- [x] `getCartWithItems(userId)` returns the active cart, total item count, items array with snapshot prices and book details, and calculated subtotal.
