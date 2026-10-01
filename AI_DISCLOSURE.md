@@ -237,3 +237,28 @@
 - **การตัดสินใจของมนุษย์ (Human Decision)**:
   - สั่งเริ่มการอิมพลีเมนต์ตามสเปกและยอมรับผลการตรวจสอบการทำงานทั้งหมด
 
+### รอบที่ 19: Tracer-Bullet Ticket Breakdown for Spec-0004 (/to-tickets)
+- **วันที่**: 2026-10-02
+- **โจทย์ที่ป้อนให้ AI**: ย่อยเอกสารข้อกำหนด Spec-0004 (Relational Junction Tables Over PostgreSQL JSONB or Native Arrays) ออกเป็นชุดงานย่อยแบบ Tracer-Bullet Tickets
+- **สิ่งที่ AI นำเสนอ**:
+  - เสนอการซอยงานเป็น 3 Vertical Slices:
+    1. Ticket 01: Multi-Category & Multi-Author Association and Composite Key Guard Slice (เริ่มได้ทันที)
+    2. Ticket 02: Referential Integrity & Cascading Deletion Verification Slice (บล็อกโดย Ticket 01)
+    3. Ticket 03: Relational Catalog Querying & Multi-Taxonomy Filtering Slice (บล็อกโดย Ticket 01)
+  - สร้างไฟล์ Ticket ทั้ง 3 ฉบับพร้อม Acceptance Criteria ครบถ้วนใน `.scratch/0004-relational-junction-tables/issues/`
+- **การตัดสินใจของมนุษย์ (Human Decision)**:
+  - ตรวจสอบและยืนยันการแบ่ง Tickets และลำดับ Blocking Edges ทั้งหมด
+
+### รอบที่ 20: Implementation & Test-Driven Development for Spec-0004 (/implement, /tdd)
+- **วันที่**: 2026-10-02
+- **โจทย์ที่ป้อนให้ AI**: ลงมือพัฒนาโค้ดตาม Tickets ของ Spec-0004 (Relational Junction Tables Over PostgreSQL JSONB or Native Arrays) ทั้ง 3 Tickets โดยยึดหลัก TDD (Red-Green-Refactor)
+- **สิ่งที่ AI นำเสนอ**:
+  - พัฒนาโมดูล [src/modules/catalog/catalog.repository.ts](file:///c:/Users/bond/Documents/miniproject-db-e-book/src/modules/catalog/catalog.repository.ts) และ DTO:
+    - Ticket 01: เมธอด `assignCategory` และ `assignAuthor` พร้อมระบบป้องกันการจับคู่ซ้ำด้วย Composite Primary Key (`ConflictError`) และ Foreign Key Constraint Checks (`NotFoundError`)
+    - Ticket 02: เมธอด `deleteCategory`, `deleteAuthor`, และ `deleteBook` พร้อมตรวจสอบพฤติกรรม `ON DELETE CASCADE` ลบแถวความสัมพันธ์อัตโนมัติโดยไม่ทำลายเอนทิตีที่เกี่ยวข้อง และไม่เกิด Orphaned Records
+    - Ticket 03: เมธอด `getBookDetails`, `getBooksByCategory`, และ `getBooksByAuthor` เชื่อมต่อตารางด้วย ANSI SQL `JOIN` ประกอบโครงสร้างข้อมูลระดับ 1NF/3NF อย่างสมบูรณ์โดยไม่ใช้คอลัมน์ JSONB หรือ Text Array
+  - เขียนและรันชุดการทดสอบ TDD ทั้ง 14 เคสใหม่ ผ่าน 100% รวมชุดทดสอบของระบบเป็น 72 เคสผ่านฉลุย
+  - ตรวจสอบความถูกต้องของ Typecheck (`tsc --noEmit`) 0 errors
+- **การตัดสินใจของมนุษย์ (Human Decision)**:
+  - สั่งเริ่มการอิมพลีเมนต์ตามสเปกและยอมรับผลการตรวจสอบการทำงานทั้งหมด
+
