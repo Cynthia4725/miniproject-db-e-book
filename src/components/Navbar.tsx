@@ -6,21 +6,25 @@ export async function Navbar() {
   const currentUser = await getCurrentUser();
 
   return (
-    <header className="sticky top-0 z-50 shadow-sm">
+    <header className="sticky top-0 z-50 shadow-sm" suppressHydrationWarning>
       <DemoSwitcher currentUser={currentUser} />
-      <nav className="bg-white border-b border-slate-200">
+      <nav className="bg-white border-b border-slate-200" suppressHydrationWarning>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16 items-center">
             <div className="flex items-center gap-8">
-              <Link href="/" className="flex items-center gap-2 text-xl font-bold text-slate-900 hover:text-emerald-600 transition-colors">
+              <Link
+                href="/"
+                className="flex items-center gap-2 text-xl font-bold text-slate-900 hover:text-emerald-600 transition-colors"
+                suppressHydrationWarning
+              >
                 <span className="text-2xl">📚</span>
                 <span>Neon E-Book Store</span>
               </Link>
-              <div className="hidden sm:flex items-center gap-6 text-sm font-medium text-slate-600">
-                <Link href="/" className="hover:text-emerald-600 transition-colors">
+              <div className="hidden sm:flex items-center gap-6 text-sm font-medium text-slate-600" suppressHydrationWarning>
+                <Link href="/" className="hover:text-emerald-600 transition-colors" suppressHydrationWarning>
                   แคตตาล็อก (Catalog)
                 </Link>
-                <Link href="/library" className="hover:text-emerald-600 transition-colors">
+                <Link href="/library" className="hover:text-emerald-600 transition-colors" suppressHydrationWarning>
                   คลังหนังสือของฉัน (My Library)
                 </Link>
               </div>

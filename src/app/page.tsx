@@ -28,7 +28,7 @@ export default async function CatalogPage({
     'SELECT id, name, slug FROM categories ORDER BY name ASC;'
   );
 
-  // Fetch books with author and category joins
+  // Fetch books with author and category joins (grouped to avoid duplicate rows from M:N junction)
   let queryText = `
     SELECT 
       b.id,
@@ -37,12 +37,12 @@ export default async function CatalogPage({
       b.price,
       b.discount_price,
       b.cover_image_url,
-      c.name AS category_name,
-      a.name AS author_name
+      STRING_AGG(DISTINCT c.name, ', ') AS category_name,
+      STRING_AGG(DISTINCT a.name, ', ') AS author_name
     FROM books b
     LEFT JOIN book_categories bc ON b.id = bc.book_id
     LEFT JOIN categories c ON bc.category_id = c.id
-    LEFT JOIN book_authors ba ON b.id = ba.book_id AND ba.author_role = 'main_author'
+    LEFT JOIN book_authors ba ON b.id = ba.book_id
     LEFT JOIN authors a ON ba.author_id = a.id
     WHERE b.is_active = TRUE
   `;
@@ -50,15 +50,30 @@ export default async function CatalogPage({
 
   if (params.category) {
     queryParams.push(params.category);
-    queryText += ` AND c.slug = $${queryParams.length}`;
+    queryText += ` AND EXISTS (
+      SELECT 1 FROM book_categories bc2 
+      JOIN categories c2 ON bc2.category_id = c2.id 
+      WHERE bc2.book_id = b.id AND c2.slug = $${queryParams.length}
+    )`;
   }
 
   if (params.q) {
     queryParams.push(`%${params.q.trim()}%`);
-    queryText += ` AND (b.title ILIKE $${queryParams.length} OR a.name ILIKE $${queryParams.length})`;
+    queryText += ` AND (
+      b.title ILIKE $${queryParams.length} 
+      OR EXISTS (
+        SELECT 1 FROM book_authors ba2 
+        JOIN authors a2 ON ba2.author_id = a2.id 
+        WHERE ba2.book_id = b.id AND a2.name ILIKE $${queryParams.length}
+      )
+    )`;
   }
 
-  queryText += ' ORDER BY b.id DESC LIMIT 40;';
+  queryText += `
+    GROUP BY b.id, b.title, b.subtitle, b.price, b.discount_price, b.cover_image_url
+    ORDER BY b.id DESC 
+    LIMIT 40;
+  `;
   const books = await db.query<BookItem>(queryText, queryParams);
 
   return (
@@ -81,9 +96,10 @@ export default async function CatalogPage({
       {/* Filter and Search Bar */}
       <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
         {/* Category Pills */}
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap gap-2" suppressHydrationWarning>
           <Link
             href="/"
+            suppressHydrationWarning
             className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${
               !params.category
                 ? 'bg-emerald-600 text-white'
@@ -96,6 +112,7 @@ export default async function CatalogPage({
             <Link
               key={c.id}
               href={`/?category=${c.slug}`}
+              suppressHydrationWarning
               className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${
                 params.category === c.slug
                   ? 'bg-emerald-600 text-white'
@@ -160,7 +177,11 @@ export default async function CatalogPage({
               {/* Book Info */}
               <div className="p-4 flex-1 flex flex-col justify-between">
                 <div>
-                  <Link href={`/books/${book.id}`} className="hover:text-emerald-600 transition-colors">
+                  <Link
+                    href={`/books/${book.id}`}
+                    className="hover:text-emerald-600 transition-colors"
+                    suppressHydrationWarning
+                  >
                     <h3 className="font-bold text-slate-900 text-sm line-clamp-2">{book.title}</h3>
                   </Link>
                   {book.author_name && (
