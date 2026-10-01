@@ -444,6 +444,27 @@
      - พัฒนาหน้าจอ `/register` และ `/login` พร้อมระบบ Quick-Fill บัญชีทดสอบสำหรับให้อาจารย์และผู้ตรวจงานทดสอบได้สะดวกรวดเร็ว
      - เพิ่มลิงก์เข้าสู่ระบบและสมัครสมาชิกในแถบ Demo Persona Switcher (`src/components/DemoSwitcher.tsx`)
      - เขียนชุดทดสอบครอบคลุม 121/121 การทดสอบในระบบ ผ่านฉลุย 100% พร้อมทดสอบ `tsc --noEmit` และ `next build` สำเร็จเรียบร้อย
+### รอบที่ 35: Comprehensive Frontend Redesign (/redesign-existing-projects & /grill-me)
+- **วันที่**: 2026-10-02
+- **โจทย์ที่ป้อนให้ AI**: ยกเครื่องดีไซน์หน้าบ้าน (Frontend Redesign) ของระบบร้านขาย E-Book ทั้งหมด ให้สวยงาม พรีเมียม ทันสมัยตามมาตรฐานระดับสูง ไม่ดูเป็นเทมเพลตสำเร็จรูป
+- **กระบวนการทำงานร่วมกับ AI**:
+  - ดำเนินการสัมภาษณ์ความต้องการ (Interactive Interview / Grill-me) ใน 6 ประเด็นหลัก และได้ข้อสรุปร่วมกัน:
+    1. Visual Style: Minimalist Clean & Bento Grid (เน้นเส้นขอบ Hairline คมชัด พื้นผิวแบบ Layered Flat Surface ไม่ใช้ Gradient หรือ Drop Shadow หนาเตอะ)
+    2. Redesign Scope: ครอบคลุมทั้งระบบ (Demo Switcher Ribbon, Glassmorphic Navbar, Catalog Hero & Book Cards, Book Detail, Cart & Checkout, Library, Auth Pages, และ Admin Portal)
+    3. Hero Section: Asymmetric Bento Hero (ฝั่งซ้าย: Headline ตัวหนา ค้นหาหนังสือ และสถิติสถาปัตยกรรมระบบ 3 เสาหลัก, ฝั่งขวา: การ์ด Staff Pick รายสัปดาห์ และแท็กหมวดหมู่ยอดนิยม)
+    4. Book Cards: Elevated Minimalist Bento Card พร้อม Category Pill, Tabular-nums Pricing, และ Quick Add to Cart
+    5. Navigation: รวม Demo Persona Switcher เป็น Dark Ribbon กะทัดรัด คมชัด และ Navbar แบบ Frosted Glassmorphism
+    6. Typography & Data: ใช้แบบอักษร Google Fonts `Geist` + `Geist Mono` + `Sarabun` พร้อม `font-mono tabular-nums` สำหรับตัวเลขและราคาทั้งระบบ
+- **สิ่งที่ AI สร้างและปรับปรุง**:
+  - ปรับแต่ง `tailwind.config.js` และ `src/app/globals.css` สำหรับระบบ Design Tokens (Fonts, Bento Surfaces, Glass Nav, Tabular Nums)
+  - ปรับปรุง `src/components/DemoSwitcher.tsx` และ `src/components/Navbar.tsx` เป็น Header ทันสมัยระดับพรีเมียม
+  - ยกระดับ `src/app/page.tsx` เป็น Asymmetric Bento Hero และแคตตาล็อกหนังสือ
+  - ออกแบบใหม่สำหรับหน้าหนังสือ `src/app/books/[id]/page.tsx`, ตะกร้าสินค้า `src/app/cart/page.tsx`, คลังหนังสือดิจิทัล `src/app/library/page.tsx`, การชำระเงินและอัปโหลดสลิป `src/app/orders/[order_number]/pay/page.tsx` และ `src/components/SlipUploader.tsx`
+  - ยกระดับหน้าจอความปลอดภัย `src/app/login/page.tsx`, `src/app/register/page.tsx`, และ `src/components/SlipPreviewModal.tsx`
+  - ตกแต่งหน้าจอผู้ดูแลระบบ `src/app/admin/layout.tsx`, `src/app/admin/orders/page.tsx`, `src/app/admin/books/page.tsx`, และแดชบอร์ดสถิติ 5 มิติ `src/app/admin/analytics/page.tsx`
+  - ป้องกันปัญหา Hydration Warning จาก Browser Extension ด้วย `suppressHydrationWarning` บนลิงก์และปุ่มทั้งหมด
+  - ผ่านการตรวจสอบ TypeScript `tsc --noEmit` 0 errors, ชุดทดสอบ `vitest` ผ่าน 121/121 tests, และ `next build` ผ่าน 100%
 - **การตัดสินใจของมนุษย์ (Human Decision)**:
-  - สั่งการให้เริ่มพัฒนาระบบตาม Tickets ทั้งหมด และเตรียมส่งมอบงาน
+  - ให้ความเห็นชอบกับแนวทางการออกแบบทั้งหมด และสั่งการให้เริ่มดำเนินการจนเสร็จสมบูรณ์
+
 

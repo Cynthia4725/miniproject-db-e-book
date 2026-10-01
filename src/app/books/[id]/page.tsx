@@ -30,100 +30,128 @@ export default async function BookDetailPage({
 
   return (
     <div className="max-w-5xl mx-auto space-y-6">
-      <Link href="/" className="inline-flex items-center text-xs font-medium text-slate-500 hover:text-emerald-600 transition-colors">
-        ← กลับสู่หน้าแคตตาล็อก (Back to Catalog)
-      </Link>
+      {/* Breadcrumb Navigation */}
+      <div className="flex items-center gap-2 text-xs text-slate-500 font-mono">
+        <Link href="/" className="hover:text-emerald-700 transition-colors">
+          แคตตาล็อก
+        </Link>
+        <span className="text-slate-300">/</span>
+        <span className="text-slate-700 font-sans truncate max-w-sm">{book.title}</span>
+      </div>
 
-      <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm grid grid-cols-1 md:grid-cols-3 gap-8 p-6 sm:p-8">
-        {/* Book Cover */}
-        <div className="md:col-span-1 flex flex-col items-center">
-          <div className="w-full max-w-[260px] aspect-[3/4] bg-gradient-to-br from-slate-100 to-slate-200 rounded-xl flex items-center justify-center p-4 border border-slate-200 shadow-inner">
+      {/* Main Book Detail Bento Container */}
+      <div className="bento-surface overflow-hidden grid grid-cols-1 md:grid-cols-12 gap-8 p-6 sm:p-8">
+        {/* Left Column: Book Cover & Sample (4 cols) */}
+        <div className="md:col-span-4 flex flex-col items-center">
+          <div className="w-full max-w-[280px] aspect-[3/4] bg-gradient-to-b from-slate-100 to-slate-200/80 rounded-2xl flex items-center justify-center p-5 border border-slate-200 shadow-md relative group">
             {book.coverImageUrl ? (
+              // eslint-disable-next-line @next/next/no-img-element
               <img
                 src={book.coverImageUrl}
                 alt={book.title}
-                className="max-h-full max-w-full object-contain rounded shadow"
+                className="max-h-full max-w-full object-contain rounded-md shadow-lg border border-black/10 group-hover:scale-102 transition-transform duration-300"
               />
             ) : (
-              <div className="text-center">
-                <span className="text-6xl">📖</span>
-                <p className="text-xs text-slate-400 mt-2 font-mono">{book.isbn}</p>
+              <div className="text-center p-4">
+                <span className="text-6xl block mb-2">📖</span>
+                <p className="text-xs text-slate-500 font-mono">{book.isbn || 'e-Book'}</p>
               </div>
             )}
           </div>
 
-          <div className="mt-4 w-full">
+          <div className="mt-5 w-full max-w-[280px] space-y-2">
             <a
               href="/sample-ebook.pdf"
               target="_blank"
               rel="noopener noreferrer"
-              className="block w-full text-center py-2 px-3 border border-slate-300 hover:border-slate-400 text-slate-700 text-xs font-semibold rounded-lg transition-colors"
+              className="flex items-center justify-center gap-2 w-full py-2.5 px-4 bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 text-xs font-semibold rounded-xl transition-all shadow-2xs hover:border-slate-300"
             >
-              📄 อ่านตัวอย่างทดลองอ่าน (Sample PDF)
+              <span>📄</span>
+              <span>อ่านตัวอย่างทดลอง (Sample PDF) ↗</span>
             </a>
+            <p className="text-[10px] text-center text-slate-400 font-mono">
+              *ลิขสิทธิ์ดิจิทัลถาวร Single-User Digital License
+            </p>
           </div>
         </div>
 
-        {/* Book Metadata & Purchase */}
-        <div className="md:col-span-2 flex flex-col justify-between space-y-6">
-          <div className="space-y-3">
-            <div className="flex flex-wrap gap-2">
+        {/* Right Column: Metadata, Tech Specs & Add to Cart (8 cols) */}
+        <div className="md:col-span-8 flex flex-col justify-between space-y-6">
+          <div className="space-y-4">
+            {/* Category Tags */}
+            <div className="flex flex-wrap gap-1.5">
               {book.categories.map((c) => (
                 <span
                   key={c.categoryId}
-                  className="bg-emerald-50 text-emerald-700 text-xs font-semibold px-2.5 py-0.5 rounded-full border border-emerald-200"
+                  className="bg-emerald-50 text-emerald-800 text-[11px] font-mono font-medium px-2.5 py-0.5 rounded-full border border-emerald-200/80"
                 >
                   {c.categoryName}
                 </span>
               ))}
             </div>
 
-            <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 leading-tight">
-              {book.title}
-            </h1>
-            {book.subtitle && (
-              <p className="text-base text-slate-500 font-medium">{book.subtitle}</p>
-            )}
+            {/* Title & Subtitle */}
+            <div>
+              <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight leading-tight">
+                {book.title}
+              </h1>
+              {book.subtitle && (
+                <p className="text-sm text-slate-600 font-normal mt-1.5 leading-relaxed">
+                  {book.subtitle}
+                </p>
+              )}
+            </div>
 
-            <div className="pt-2 text-sm text-slate-600">
-              <span className="font-semibold text-slate-800">ผู้เขียน: </span>
+            {/* Author Byline */}
+            <div className="text-xs text-slate-600 flex flex-wrap items-center gap-1.5 pt-1">
+              <span className="font-semibold text-slate-800">ผู้แต่ง:</span>
               {book.authors.map((a, idx) => (
-                <span key={a.authorId}>
-                  {a.authorName} <span className="text-xs text-slate-400 font-mono">({a.authorRole})</span>
-                  {idx < book.authors.length - 1 ? ', ' : ''}
+                <span key={a.authorId} className="inline-flex items-center gap-1">
+                  <strong className="text-slate-900">{a.authorName}</strong>
+                  <span className="text-[10px] text-slate-400 font-mono">({a.authorRole})</span>
+                  {idx < book.authors.length - 1 ? '•' : ''}
                 </span>
               ))}
             </div>
 
-            {/* Spec grid */}
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 pt-3 border-t border-slate-100 text-xs">
-              <div className="bg-slate-50 p-2.5 rounded-lg border border-slate-100">
-                <span className="text-slate-400 block">รูปแบบไฟล์</span>
-                <strong className="text-slate-700">{book.fileFormat} (Digital)</strong>
+            {/* Specifications Bento Grid */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 pt-3">
+              <div className="bg-slate-50/80 p-3 rounded-xl border border-slate-100">
+                <span className="text-[10px] font-mono uppercase text-slate-400 block mb-0.5">รูปแบบไฟล์</span>
+                <strong className="text-slate-800 text-xs font-semibold">{book.fileFormat} (Digital)</strong>
               </div>
-              <div className="bg-slate-50 p-2.5 rounded-lg border border-slate-100">
-                <span className="text-slate-400 block">จำนวนหน้า</span>
-                <strong className="text-slate-700">{book.pageCount} หน้า</strong>
+              <div className="bg-slate-50/80 p-3 rounded-xl border border-slate-100">
+                <span className="text-[10px] font-mono uppercase text-slate-400 block mb-0.5">จำนวนหน้า</span>
+                <strong className="text-slate-800 text-xs font-semibold tabular-nums">{book.pageCount} หน้า</strong>
               </div>
-              <div className="bg-slate-50 p-2.5 rounded-lg border border-slate-100">
-                <span className="text-slate-400 block">ISBN</span>
-                <strong className="text-slate-700 font-mono">{book.isbn}</strong>
+              <div className="bg-slate-50/80 p-3 rounded-xl border border-slate-100">
+                <span className="text-[10px] font-mono uppercase text-slate-400 block mb-0.5">รหัสมาตรฐาน</span>
+                <strong className="text-slate-800 text-xs font-mono font-semibold truncate block">{book.isbn || 'N/A'}</strong>
+              </div>
+              <div className="bg-slate-50/80 p-3 rounded-xl border border-slate-100">
+                <span className="text-[10px] font-mono uppercase text-slate-400 block mb-0.5">สำนักพิมพ์</span>
+                <strong className="text-slate-800 text-xs font-semibold truncate block">{book.publisherName || 'อิสระ'}</strong>
               </div>
             </div>
           </div>
 
-          {/* Pricing & Add to Cart */}
-          <div className="p-4 bg-slate-50 rounded-xl border border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          {/* Pricing & Add to Cart Action Card */}
+          <div className="p-5 bg-gradient-to-r from-slate-50 to-emerald-50/30 rounded-2xl border border-slate-200/90 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
-              <span className="text-xs text-slate-500 block">ราคาลิขสิทธิ์ดิจิทัลถาวร:</span>
-              <div className="flex items-baseline gap-2">
-                <span className="text-2xl font-black text-emerald-600">
+              <span className="text-xs text-slate-500 font-medium block">ราคาลิขสิทธิ์ดิจิทัลถาวร (Net Price)</span>
+              <div className="flex items-baseline gap-2.5 mt-0.5">
+                <span className="text-3xl font-black text-slate-900 font-mono tabular-nums">
                   ฿{effectivePrice.toLocaleString()}
                 </span>
                 {hasDiscount && (
-                  <span className="text-sm text-slate-400 line-through">
-                    ฿{book.price.toLocaleString()}
-                  </span>
+                  <div className="flex items-center gap-1.5 font-mono">
+                    <span className="text-xs text-slate-400 line-through tabular-nums">
+                      ฿{book.price.toLocaleString()}
+                    </span>
+                    <span className="text-[10px] font-bold text-rose-600 bg-rose-50 px-1.5 py-0.5 rounded border border-rose-200">
+                      SALE
+                    </span>
+                  </div>
                 )}
               </div>
             </div>
@@ -131,7 +159,7 @@ export default async function BookDetailPage({
             <form action={addToCartAction.bind(null, book.id)}>
               <button
                 type="submit"
-                className="w-full sm:w-auto px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm rounded-xl shadow transition-colors flex items-center justify-center gap-2"
+                className="w-full sm:w-auto px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow transition-all flex items-center justify-center gap-2 active:scale-95"
               >
                 <span>🛒 เพิ่มลงในตะกร้า (Add to Cart)</span>
               </button>

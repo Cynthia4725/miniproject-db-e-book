@@ -76,18 +76,18 @@ export function SlipUploader({ orderNumber, action }: SlipUploaderProps) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="border-t border-slate-100 pt-4 space-y-4">
+    <form onSubmit={handleSubmit} className="border-t border-slate-100 pt-5 space-y-4">
       <input type="hidden" name="slip_url" value={previewUrl || ''} />
 
       <div>
-        <label className="block text-xs font-semibold text-slate-700 mb-2">
-          อัปโหลดรูปภาพสลิปโอนเงิน (Transfer Slip Image)
+        <label className="block text-xs font-semibold text-slate-800 mb-2">
+          อัปโหลดรูปภาพสลิปโอนเงิน (Transfer Slip)
         </label>
 
         {/* Upload Dropzone */}
         <div
           onClick={() => fileInputRef.current?.click()}
-          className="border-2 border-dashed border-slate-300 hover:border-emerald-500 hover:bg-emerald-50/20 rounded-xl p-5 text-center cursor-pointer transition-colors flex flex-col items-center justify-center gap-2 group"
+          className="border border-dashed border-slate-300 hover:border-emerald-500 hover:bg-emerald-50/30 rounded-xl p-5 text-center cursor-pointer transition-colors flex flex-col items-center justify-center gap-2 group bg-slate-50/50"
         >
           <input
             ref={fileInputRef}
@@ -96,30 +96,31 @@ export function SlipUploader({ orderNumber, action }: SlipUploaderProps) {
             onChange={handleFileChange}
             className="hidden"
           />
-          <div className="w-10 h-10 rounded-full bg-slate-100 group-hover:bg-emerald-100 flex items-center justify-center text-slate-500 group-hover:text-emerald-700 transition-colors">
+          <div className="w-10 h-10 rounded-lg bg-white border border-slate-200 group-hover:border-emerald-300 group-hover:bg-emerald-50 flex items-center justify-center text-slate-500 group-hover:text-emerald-700 transition-colors shadow-xs">
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.75} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
             </svg>
           </div>
           <div>
-            <p className="text-xs font-bold text-slate-700 group-hover:text-emerald-700">
+            <p className="text-xs font-semibold text-slate-800 group-hover:text-emerald-700 transition-colors">
               คลิกเพื่อเลือกไฟล์รูปภาพสลิป
             </p>
             <p className="text-[11px] text-slate-400 mt-0.5">
-              รองรับ PNG, JPEG, WebP (ขนาดสูงสุด 2 MB)
+              รองรับ PNG, JPEG, WebP (ขนาดไม่เกิน 2 MB)
             </p>
           </div>
         </div>
 
         {/* Quick Mock Helper */}
-        <div className="flex justify-between items-center mt-2">
+        <div className="flex justify-between items-center mt-2 px-1">
           <span className="text-[10px] text-slate-400">
-            *ระบบจะแปลงไฟล์เป็น Base64 Data URL ปลอดภัยและบันทึกลงฐานข้อมูล
+            ระบบจัดเก็บ Base64 Data URL โดยตรง ปลอดภัยต่อการตรวจสอบ
           </span>
           <button
             type="button"
             onClick={handleUseMock}
-            className="text-[10px] text-emerald-600 hover:text-emerald-800 underline font-medium"
+            suppressHydrationWarning
+            className="text-[10px] text-emerald-600 hover:text-emerald-800 font-medium underline underline-offset-2"
           >
             ใช้รูปตัวอย่างจำลอง
           </button>
@@ -128,12 +129,16 @@ export function SlipUploader({ orderNumber, action }: SlipUploaderProps) {
 
       {/* Error Alert */}
       {errorMessage && (
-        <div className="p-3 bg-red-50 border border-red-200 rounded-lg text-xs text-red-700 flex items-center justify-between">
-          <span>⚠️ {errorMessage}</span>
+        <div className="p-3 bg-red-50 border border-red-200/80 rounded-xl text-xs text-red-700 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <span className="text-red-500 font-bold">!</span>
+            <span>{errorMessage}</span>
+          </div>
           <button
             type="button"
             onClick={() => setErrorMessage(null)}
-            className="text-red-500 hover:text-red-800 font-bold ml-2"
+            suppressHydrationWarning
+            className="text-red-400 hover:text-red-700 text-sm font-bold ml-2"
           >
             ✕
           </button>
@@ -142,8 +147,8 @@ export function SlipUploader({ orderNumber, action }: SlipUploaderProps) {
 
       {/* Live Preview Card */}
       {previewUrl && (
-        <div className="bg-slate-50 border border-slate-200 rounded-xl p-4 flex items-center gap-4">
-          <div className="w-20 h-24 bg-white rounded-lg border border-slate-200 overflow-hidden flex-shrink-0 relative shadow-xs">
+        <div className="bg-slate-50 border border-slate-200/80 rounded-xl p-3.5 flex items-center gap-4">
+          <div className="w-16 h-20 bg-white rounded-lg border border-slate-200 overflow-hidden flex-shrink-0 relative shadow-xs">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={previewUrl}
@@ -151,20 +156,21 @@ export function SlipUploader({ orderNumber, action }: SlipUploaderProps) {
               className="w-full h-full object-cover"
             />
           </div>
-          <div className="flex-1 min-w-0">
-            <span className="inline-block px-2 py-0.5 bg-emerald-100 text-emerald-800 text-[10px] font-bold rounded mb-1">
+          <div className="flex-1 min-w-0 space-y-1">
+            <span className="inline-block px-2 py-0.5 bg-emerald-50 text-emerald-800 text-[10px] font-bold rounded border border-emerald-200/60">
               พร้อมส่งตรวจสอบ
             </span>
-            <p className="text-xs font-bold text-slate-800 truncate">
+            <p className="text-xs font-semibold text-slate-800 truncate">
               {fileName || 'slip-image'}
             </p>
-            <p className="text-[11px] text-slate-400">
-              ขนาดไฟล์: {fileSize || '-'}
+            <p className="text-[11px] text-slate-400 font-mono">
+              ขนาด: {fileSize || '-'}
             </p>
             <button
               type="button"
               onClick={handleClear}
-              className="text-[11px] text-red-600 hover:text-red-800 underline mt-1 font-medium block"
+              suppressHydrationWarning
+              className="text-[11px] text-red-600 hover:text-red-800 font-medium block pt-0.5"
             >
               ลบ / เลือกรูปใหม่
             </button>
@@ -176,7 +182,8 @@ export function SlipUploader({ orderNumber, action }: SlipUploaderProps) {
       <button
         type="submit"
         disabled={!previewUrl || isPending}
-        className="w-full py-3 bg-emerald-600 hover:bg-emerald-700 disabled:bg-slate-300 disabled:cursor-not-allowed text-white font-bold text-xs rounded-xl shadow transition-colors flex items-center justify-center gap-2"
+        suppressHydrationWarning
+        className="w-full py-3 bg-emerald-600 hover:bg-emerald-500 disabled:bg-slate-200 disabled:text-slate-400 disabled:cursor-not-allowed text-white font-semibold text-xs rounded-xl shadow-sm hover:shadow transition-all flex items-center justify-center gap-2"
       >
         {isPending ? (
           <>
@@ -187,7 +194,12 @@ export function SlipUploader({ orderNumber, action }: SlipUploaderProps) {
             <span>กำลังส่งข้อมูลสลิป...</span>
           </>
         ) : (
-          <span>📤 ส่งหลักฐานการชำระเงิน (Submit Slip)</span>
+          <>
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+            </svg>
+            <span>ส่งหลักฐานการชำระเงิน (Submit Slip)</span>
+          </>
         )}
       </button>
     </form>

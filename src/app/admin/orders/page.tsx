@@ -36,28 +36,34 @@ export default async function AdminOrdersPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
           <h2 className="text-lg font-bold text-slate-900">
-            คิวตรวจสอบสลิปการโอนเงิน (Payment Slip Verification Queue)
+            คิวตรวจสอบสลิปการโอนเงิน
           </h2>
-          <p className="text-xs text-slate-500 mt-0.5">
-            รายการคำสั่งซื้อสถานะ PAYMENT_SUBMITTED ที่รอดำเนินการ: {pendingOrders.length} รายการ
+          <p className="text-xs text-slate-500 mt-0.5 font-mono">
+            PAYMENT_SUBMITTED & PENDING_REVIEW: {pendingOrders.length} รายการ
           </p>
         </div>
       </div>
 
       {pendingOrders.length === 0 ? (
-        <div className="bg-white rounded-xl border border-slate-200 p-12 text-center shadow-sm space-y-2">
-          <span className="text-4xl block">✨</span>
-          <h3 className="font-bold text-slate-800 text-sm">ไม่มีสลิปที่รอการตรวจสอบในขณะนี้</h3>
-          <p className="text-xs text-slate-400">เมื่อลูกค้าทำการสั่งซื้อและส่งสลิปโอนเงิน รายการจะปรากฏขึ้นที่นี่โดยอัตโนมัติ</p>
+        <div className="bento-surface p-12 text-center space-y-3">
+          <div className="w-14 h-14 rounded-2xl bg-emerald-50 border border-emerald-200/60 flex items-center justify-center text-2xl mx-auto">
+            ✨
+          </div>
+          <div className="space-y-1">
+            <h3 className="font-bold text-slate-800 text-sm">ไม่มีสลิปที่รอการตรวจสอบในขณะนี้</h3>
+            <p className="text-xs text-slate-400 max-w-sm mx-auto">
+              เมื่อลูกค้าทำการสั่งซื้อและอัปโหลดสลิปโอนเงิน รายการจะปรากฏขึ้นที่นี่โดยอัตโนมัติ
+            </p>
+          </div>
         </div>
       ) : (
-        <div className="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-sm">
+        <div className="bento-surface overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
-              <thead className="bg-slate-50 border-b border-slate-200 text-slate-600 font-semibold uppercase">
+              <thead className="bg-slate-50/80 border-b border-slate-200/80 text-slate-500 font-semibold uppercase tracking-wider text-[11px]">
                 <tr>
                   <th className="py-3 px-4">หมายเลขคำสั่งซื้อ</th>
                   <th className="py-3 px-4">ลูกค้า</th>
@@ -68,15 +74,15 @@ export default async function AdminOrdersPage() {
               </thead>
               <tbody className="divide-y divide-slate-100 text-slate-700">
                 {pendingOrders.map((order) => (
-                  <tr key={order.payment_id} className="hover:bg-slate-50/80 transition-colors">
+                  <tr key={order.payment_id} className="hover:bg-slate-50/60 transition-colors">
                     <td className="py-3 px-4 font-mono font-bold text-slate-900">
                       {order.order_number}
                     </td>
                     <td className="py-3 px-4">
-                      <strong>{order.user_name}</strong>
-                      <span className="block text-[11px] text-slate-400">{order.user_email}</span>
+                      <span className="font-semibold text-slate-900 block">{order.user_name}</span>
+                      <span className="text-[11px] text-slate-400 font-mono">{order.user_email}</span>
                     </td>
-                    <td className="py-3 px-4 font-bold text-emerald-600">
+                    <td className="py-3 px-4 font-bold text-emerald-600 font-mono tabular-nums">
                       ฿{Number(order.amount_paid).toLocaleString()}
                     </td>
                     <td className="py-3 px-4">
@@ -93,9 +99,11 @@ export default async function AdminOrdersPage() {
                         <form action={verifyPaymentAction.bind(null, order.payment_id, 'APPROVED', undefined)}>
                           <button
                             type="submit"
-                            className="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-lg transition-colors shadow-xs"
+                            suppressHydrationWarning
+                            className="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold rounded-lg transition-all shadow-xs text-xs flex items-center gap-1"
                           >
-                            ✓ อนุมัติ (Fulfill)
+                            <span>✓</span>
+                            <span>อนุมัติ (Fulfill)</span>
                           </button>
                         </form>
 
@@ -103,7 +111,8 @@ export default async function AdminOrdersPage() {
                         <form action={verifyPaymentAction.bind(null, order.payment_id, 'REJECTED', 'สลิปไม่ถูกต้อง')}>
                           <button
                             type="submit"
-                            className="px-2.5 py-1.5 bg-red-100 hover:bg-red-200 text-red-700 font-semibold rounded-lg transition-colors"
+                            suppressHydrationWarning
+                            className="px-2.5 py-1.5 bg-red-50 hover:bg-red-100 border border-red-200/60 text-red-700 font-medium rounded-lg transition-colors text-xs"
                           >
                             ✕ ปฏิเสธ
                           </button>

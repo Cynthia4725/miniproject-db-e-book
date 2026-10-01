@@ -28,27 +28,30 @@ export default function RegisterPage() {
 
   return (
     <div className="max-w-md mx-auto my-8 space-y-6" suppressHydrationWarning>
-      <div className="text-center" suppressHydrationWarning>
-        <span className="text-3xl block mb-2">📚</span>
-        <h1 className="text-2xl font-extrabold text-slate-900">
-          สมัครสมาชิกใหม่ (Register)
+      <div className="text-center space-y-1.5" suppressHydrationWarning>
+        <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-slate-100 text-slate-700 rounded-full border border-slate-200/80 text-[11px] font-semibold">
+          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+          Member Registration
+        </div>
+        <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900">
+          สมัครสมาชิกใหม่
         </h1>
-        <p className="text-xs text-slate-500 mt-1">
+        <p className="text-xs text-slate-500">
           สร้างบัญชีเพื่อสั่งซื้อ e-Book และรับสิทธิ์อ่านในคลังหนังสือดิจิทัลส่วนตัว
         </p>
       </div>
 
-      <div className="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 shadow-sm" suppressHydrationWarning>
+      <div className="bento-surface p-6 sm:p-8" suppressHydrationWarning>
         {error && (
-          <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-xl text-xs text-red-700 flex items-start gap-2">
-            <span>⚠️</span>
-            <div className="flex-1">{error}</div>
+          <div className="mb-5 p-3.5 bg-red-50 border border-red-200/80 rounded-xl text-xs text-red-700 flex items-start gap-2.5">
+            <span className="text-red-500 font-bold">!</span>
+            <div className="flex-1 leading-relaxed">{error}</div>
           </div>
         )}
 
         <form onSubmit={handleSubmit} className="space-y-4" suppressHydrationWarning>
-          <div>
-            <label htmlFor="full_name" className="block text-xs font-semibold text-slate-700 mb-1">
+          <div className="space-y-1.5">
+            <label htmlFor="full_name" className="block text-xs font-semibold text-slate-800">
               ชื่อ - นามสกุล <span className="text-red-500">*</span>
             </label>
             <input
@@ -57,12 +60,13 @@ export default function RegisterPage() {
               name="full_name"
               required
               placeholder="เช่น อารยา สุขใจ"
-              className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+              suppressHydrationWarning
+              className="w-full px-3.5 py-2.5 text-xs rounded-xl border border-slate-200 bg-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all"
             />
           </div>
 
-          <div>
-            <label htmlFor="email" className="block text-xs font-semibold text-slate-700 mb-1">
+          <div className="space-y-1.5">
+            <label htmlFor="email" className="block text-xs font-semibold text-slate-800">
               อีเมล (Email) <span className="text-red-500">*</span>
             </label>
             <input
@@ -71,12 +75,13 @@ export default function RegisterPage() {
               name="email"
               required
               placeholder="name@example.com"
-              className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+              suppressHydrationWarning
+              className="w-full px-3.5 py-2.5 text-xs rounded-xl border border-slate-200 bg-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all font-mono"
             />
           </div>
 
-          <div>
-            <label htmlFor="phone" className="block text-xs font-semibold text-slate-700 mb-1">
+          <div className="space-y-1.5">
+            <label htmlFor="phone" className="block text-xs font-semibold text-slate-800">
               เบอร์โทรศัพท์ (Phone)
             </label>
             <input
@@ -84,12 +89,13 @@ export default function RegisterPage() {
               id="phone"
               name="phone"
               placeholder="081-234-5678"
-              className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+              suppressHydrationWarning
+              className="w-full px-3.5 py-2.5 text-xs rounded-xl border border-slate-200 bg-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all font-mono"
             />
           </div>
 
-          <div>
-            <label htmlFor="password" className="block text-xs font-semibold text-slate-700 mb-1">
+          <div className="space-y-1.5">
+            <label htmlFor="password" className="block text-xs font-semibold text-slate-800">
               รหัสผ่าน (Password) <span className="text-red-500">*</span>
             </label>
             <input
@@ -99,12 +105,13 @@ export default function RegisterPage() {
               required
               minLength={6}
               placeholder="อย่างน้อย 6 ตัวอักษร"
-              className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+              suppressHydrationWarning
+              className="w-full px-3.5 py-2.5 text-xs rounded-xl border border-slate-200 bg-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all font-mono"
             />
           </div>
 
-          <div>
-            <label htmlFor="confirm_password" className="block text-xs font-semibold text-slate-700 mb-1">
+          <div className="space-y-1.5">
+            <label htmlFor="confirm_password" className="block text-xs font-semibold text-slate-800">
               ยืนยันรหัสผ่าน (Confirm Password) <span className="text-red-500">*</span>
             </label>
             <input
@@ -114,14 +121,16 @@ export default function RegisterPage() {
               required
               minLength={6}
               placeholder="พิมพ์รหัสผ่านเดิมอีกครั้ง"
-              className="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+              suppressHydrationWarning
+              className="w-full px-3.5 py-2.5 text-xs rounded-xl border border-slate-200 bg-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all font-mono"
             />
           </div>
 
           <button
             type="submit"
             disabled={isPending}
-            className="w-full py-3 bg-emerald-600 hover:bg-emerald-700 disabled:bg-slate-300 text-white font-bold text-xs rounded-xl shadow transition-colors flex items-center justify-center gap-2 mt-2"
+            suppressHydrationWarning
+            className="w-full py-3 bg-emerald-600 hover:bg-emerald-500 disabled:bg-slate-200 disabled:text-slate-400 disabled:cursor-not-allowed text-white font-semibold text-xs rounded-xl shadow-sm hover:shadow transition-all flex items-center justify-center gap-2 mt-3"
           >
             {isPending ? (
               <>
@@ -132,7 +141,7 @@ export default function RegisterPage() {
                 <span>กำลังสร้างบัญชี...</span>
               </>
             ) : (
-              <span>✨ ยืนยันการสมัครสมาชิก (Create Account)</span>
+              <span>ยืนยันการสมัครสมาชิก (Create Account)</span>
             )}
           </button>
         </form>
@@ -143,7 +152,7 @@ export default function RegisterPage() {
             <Link
               href="/login"
               suppressHydrationWarning
-              className="text-emerald-600 hover:text-emerald-700 font-bold underline"
+              className="text-emerald-600 hover:text-emerald-700 font-semibold underline underline-offset-2"
             >
               เข้าสู่ระบบที่นี่
             </Link>

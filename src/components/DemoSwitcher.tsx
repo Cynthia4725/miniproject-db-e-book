@@ -24,60 +24,64 @@ export function DemoSwitcher({ currentUser }: DemoSwitcherProps) {
   };
 
   return (
-    <div className="bg-slate-900 border-b border-slate-800 text-xs py-2 px-4 text-slate-300" suppressHydrationWarning>
-      <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3" suppressHydrationWarning>
+    <div className="bg-slate-950 border-b border-slate-800/80 text-xs py-1.5 px-4 text-slate-300" suppressHydrationWarning>
+      <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2.5" suppressHydrationWarning>
+        {/* Left: Persona Status Badge */}
         <div className="flex items-center gap-2" suppressHydrationWarning>
-          <span className="font-semibold text-emerald-400">🎓 อาจารย์ / กรรมการตรวจงาน (Demo Persona Switcher):</span>
+          <span className="font-mono text-[11px] font-semibold text-emerald-400/90 tracking-wide uppercase">
+            Demo Persona:
+          </span>
           {currentUser ? (
-            <span className="flex items-center gap-1 bg-slate-800 px-2 py-0.5 rounded border border-slate-700" suppressHydrationWarning>
-              <span className={`inline-block w-2 h-2 rounded-full ${currentUser.role === 'admin' ? 'bg-amber-400' : 'bg-emerald-400'}`} />
-              <strong className="text-white">{currentUser.name}</strong>
-              <span className="text-slate-400">({currentUser.role.toUpperCase()})</span>
-            </span>
+            <div className="flex items-center gap-1.5 bg-slate-900/90 px-2.5 py-0.5 rounded-full border border-slate-800 text-[11px]" suppressHydrationWarning>
+              <span className={`inline-block w-1.5 h-1.5 rounded-full ${currentUser.role === 'admin' ? 'bg-amber-400 shadow-[0_0_8px_rgba(251,191,36,0.6)]' : 'bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.6)]'}`} />
+              <strong className="text-white font-medium">{currentUser.name}</strong>
+              <span className="text-slate-400 font-mono text-[10px]">({currentUser.role})</span>
+            </div>
           ) : (
-            <span className="text-slate-400 italic">ยังไม่ได้เลือกบทบาท (Guest)</span>
+            <span className="text-slate-400 text-[11px] italic">Guest (ยังไม่ได้เลือกบทบาท)</span>
           )}
         </div>
 
-        <div className="flex items-center gap-2" suppressHydrationWarning>
+        {/* Right: Switcher & Auth Actions */}
+        <div className="flex items-center gap-1.5" suppressHydrationWarning>
           <button
             type="button"
             disabled={isPending}
             onClick={() => handleSwitch('customer')}
-            className={`px-2.5 py-1 rounded font-medium transition-colors ${
+            className={`px-2.5 py-1 rounded-md text-[11px] font-medium transition-all ${
               currentUser?.role === 'customer'
-                ? 'bg-emerald-600 text-white cursor-default'
-                : 'bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700'
+                ? 'bg-emerald-600/90 text-white shadow-xs cursor-default'
+                : 'bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800 hover:text-white'
             }`}
           >
-            👤 สลับเป็น ลูกค้า (Somchai)
+            👤 ลูกค้า (Somchai)
           </button>
           <button
             type="button"
             disabled={isPending}
             onClick={() => handleSwitch('admin')}
-            className={`px-2.5 py-1 rounded font-medium transition-colors ${
+            className={`px-2.5 py-1 rounded-md text-[11px] font-medium transition-all ${
               currentUser?.role === 'admin'
-                ? 'bg-amber-600 text-white cursor-default'
-                : 'bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700'
+                ? 'bg-amber-600/90 text-white shadow-xs cursor-default'
+                : 'bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800 hover:text-white'
             }`}
           >
-            🛡️ สลับเป็น แอดมิน (Admin)
+            🛡️ แอดมิน (Admin)
           </button>
 
-          <span className="text-slate-600">|</span>
+          <span className="text-slate-700 mx-1">|</span>
 
           <a
             href="/login"
             suppressHydrationWarning
-            className="px-2 py-1 rounded text-slate-300 hover:text-white hover:bg-slate-800 transition-colors"
+            className="px-2 py-1 rounded text-[11px] text-slate-300 hover:text-white hover:bg-slate-900 transition-colors"
           >
             เข้าสู่ระบบ
           </a>
           <a
             href="/register"
             suppressHydrationWarning
-            className="px-2 py-1 rounded text-emerald-400 hover:text-emerald-300 hover:bg-slate-800 transition-colors"
+            className="px-2 py-1 rounded text-[11px] text-emerald-400 hover:text-emerald-300 hover:bg-slate-900 transition-colors font-medium"
           >
             สมัครสมาชิก
           </a>
@@ -87,7 +91,7 @@ export function DemoSwitcher({ currentUser }: DemoSwitcherProps) {
               type="button"
               disabled={isPending}
               onClick={handleLogout}
-              className="px-2.5 py-1 rounded font-medium bg-red-950/40 hover:bg-red-900/60 text-red-300 border border-red-800/50 transition-colors ml-1"
+              className="px-2 py-0.5 rounded text-[11px] text-rose-300/80 hover:text-rose-200 hover:bg-rose-950/40 border border-rose-900/40 transition-colors ml-1"
             >
               ออก
             </button>
