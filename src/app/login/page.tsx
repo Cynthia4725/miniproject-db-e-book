@@ -35,8 +35,8 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="max-w-md mx-auto my-8 space-y-6">
-      <div className="text-center">
+    <div className="max-w-md mx-auto my-8 space-y-6" suppressHydrationWarning>
+      <div className="text-center" suppressHydrationWarning>
         <span className="text-3xl block mb-2">🔐</span>
         <h1 className="text-2xl font-extrabold text-slate-900">
           เข้าสู่ระบบ (Sign In)
@@ -46,7 +46,7 @@ export default function LoginPage() {
         </p>
       </div>
 
-      <div className="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 shadow-sm">
+      <div className="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 shadow-sm" suppressHydrationWarning>
         {error && (
           <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-xl text-xs text-red-700 flex items-start gap-2">
             <span>⚠️</span>
@@ -54,7 +54,7 @@ export default function LoginPage() {
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-4" suppressHydrationWarning>
           <div>
             <label htmlFor="email" className="block text-xs font-semibold text-slate-700 mb-1">
               อีเมล (Email)
@@ -107,7 +107,7 @@ export default function LoginPage() {
         </form>
 
         {/* Evaluator Quick-Fill Cards */}
-        <div className="mt-6 pt-4 border-t border-slate-100">
+        <div className="mt-6 pt-4 border-t border-slate-100" suppressHydrationWarning>
           <p className="text-[11px] font-bold text-slate-600 uppercase tracking-wider mb-2">
             บัญชีทดสอบสำหรับอาจารย์/ผู้ตรวจ (Quick Fill):
           </p>
@@ -131,10 +131,14 @@ export default function LoginPage() {
           </div>
         </div>
 
-        <div className="border-t border-slate-100 mt-6 pt-4 text-center">
-          <p className="text-xs text-slate-500">
+        <div className="border-t border-slate-100 mt-6 pt-4 text-center" suppressHydrationWarning>
+          <p className="text-xs text-slate-500" suppressHydrationWarning>
             ยังไม่มีบัญชีผู้ใช้งาน?{' '}
-            <Link href="/register" className="text-emerald-600 hover:text-emerald-700 font-bold underline">
+            <Link
+              href="/register"
+              suppressHydrationWarning
+              className="text-emerald-600 hover:text-emerald-700 font-bold underline"
+            >
               สมัครสมาชิกใหม่
             </Link>
           </p>

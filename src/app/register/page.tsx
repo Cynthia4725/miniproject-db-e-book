@@ -27,8 +27,8 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="max-w-md mx-auto my-8 space-y-6">
-      <div className="text-center">
+    <div className="max-w-md mx-auto my-8 space-y-6" suppressHydrationWarning>
+      <div className="text-center" suppressHydrationWarning>
         <span className="text-3xl block mb-2">📚</span>
         <h1 className="text-2xl font-extrabold text-slate-900">
           สมัครสมาชิกใหม่ (Register)
@@ -38,7 +38,7 @@ export default function RegisterPage() {
         </p>
       </div>
 
-      <div className="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 shadow-sm">
+      <div className="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 shadow-sm" suppressHydrationWarning>
         {error && (
           <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-xl text-xs text-red-700 flex items-start gap-2">
             <span>⚠️</span>
@@ -46,7 +46,7 @@ export default function RegisterPage() {
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-4" suppressHydrationWarning>
           <div>
             <label htmlFor="full_name" className="block text-xs font-semibold text-slate-700 mb-1">
               ชื่อ - นามสกุล <span className="text-red-500">*</span>
@@ -137,10 +137,14 @@ export default function RegisterPage() {
           </button>
         </form>
 
-        <div className="border-t border-slate-100 mt-6 pt-4 text-center">
-          <p className="text-xs text-slate-500">
+        <div className="border-t border-slate-100 mt-6 pt-4 text-center" suppressHydrationWarning>
+          <p className="text-xs text-slate-500" suppressHydrationWarning>
             มีบัญชีผู้ใช้งานอยู่แล้ว?{' '}
-            <Link href="/login" className="text-emerald-600 hover:text-emerald-700 font-bold underline">
+            <Link
+              href="/login"
+              suppressHydrationWarning
+              className="text-emerald-600 hover:text-emerald-700 font-bold underline"
+            >
               เข้าสู่ระบบที่นี่
             </Link>
           </p>
