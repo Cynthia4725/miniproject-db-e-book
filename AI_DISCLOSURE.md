@@ -355,3 +355,13 @@
   - จัดเตรียม [.env.example](file:///c:/Users/bond/Documents/miniproject-db-e-book/.env.example) และ Push โค้ดทั้งหมดขึ้น GitHub Main Branch พร้อมสำหรับการเชื่อมต่อ Vercel
 - **การตัดสินใจของมนุษย์ (Human Decision)**:
   - เลือกให้ AI ดำเนินการสร้าง Neon Project อัตโนมัติ และสั่งเตรียมขั้นตอนการเชื่อมต่อ Vercel
+
+### รอบที่ 28: Resolving Catalog Duplicate Keys and Browser Extension Hydration Mismatches
+- **วันที่**: 2026-10-02
+- **โจทย์ที่ป้อนให้ AI**: แก้ไข Error 2 จุด: (1) `Encountered two children with the same key, '5'` ในหน้าแคตตาล็อก และ (2) React Hydration Mismatch เกิดจากคลาส `keychainify-checked` ที่ Browser Extension ฉีดใส่แท็ก `<a>`
+- **สิ่งที่ AI นำเสนอ**:
+  - แก้ไข Error 1 ใน [src/app/page.tsx](file:///c:/Users/bond/Documents/miniproject-db-e-book/src/app/page.tsx): ปรับ SQL Query โดยเปลี่ยนจากการ `LEFT JOIN` แบบธรรมดาซึ่งทำให้หนังสือที่มีหลายหมวดหมู่/หลายผู้แต่งเกิดแถวซ้ำ มาเป็น `GROUP BY b.id` พร้อมใช้ `STRING_AGG(DISTINCT c.name, ', ')` และ `EXISTS` สำหรับตัวกรอง ทำให้ผลลัพธ์หนังสือแต่ละเล่มมีแถวเดียวเสมอ และคีย์ React `key={book.id}` ไม่ซ้ำกันอีกต่อไป
+  - แก้ไข Error 2 ใน [src/app/layout.tsx](file:///c:/Users/bond/Documents/miniproject-db-e-book/src/app/layout.tsx), [src/components/Navbar.tsx](file:///c:/Users/bond/Documents/miniproject-db-e-book/src/components/Navbar.tsx), และ [src/app/page.tsx](file:///c:/Users/bond/Documents/miniproject-db-e-book/src/app/page.tsx): เพิ่ม `suppressHydrationWarning` บน `<html>`, `<body>`, และแท็ก `<Link>`/`<a>` เพื่อป้องกันไม่ให้ React ฟ้อง Mismatch เมื่อ Browser Extension (เช่น ส่วนขยายจัดการรหัสผ่าน Keychainify / 1Password) ฉีดคลาสหรือ Attribute ลงบน DOM ก่อน React ทำ Hydration
+  - ผ่านการทดสอบ Vitest 105/105 เคส, TypeScript 0 errors, และ `next build` ผ่านฉลุย พร้อม Push ขึ้น GitHub
+- **การตัดสินใจของมนุษย์ (Human Decision)**:
+  - รายงาน Error ทั้ง 2 จุดและยอมรับแนวทางการแก้ไขทางสถาปัตยกรรมของ AI
