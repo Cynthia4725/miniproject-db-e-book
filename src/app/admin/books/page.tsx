@@ -1,6 +1,8 @@
 import { getDatabaseExecutor } from '@/db/client';
 import { createBookAction, toggleBookStatusAction, updateBookPriceAction } from '@/app/actions/admin.actions';
 
+export const dynamic = 'force-dynamic';
+
 interface AdminBookItem {
   id: number;
   title: string;

@@ -3,6 +3,8 @@ import { CartRepository } from '@/modules/cart/cart.repository';
 import { getCurrentUser, DEMO_USERS, setSessionCookie } from '@/lib/session';
 import { removeFromCartAction, checkoutAction } from '@/app/actions/cart.actions';
 
+export const dynamic = 'force-dynamic';
+
 export default async function CartPage() {
   let user = await getCurrentUser();
   if (!user) {

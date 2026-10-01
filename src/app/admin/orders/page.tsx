@@ -1,6 +1,8 @@
 import { getDatabaseExecutor } from '@/db/client';
 import { verifyPaymentAction } from '@/app/actions/admin.actions';
 
+export const dynamic = 'force-dynamic';
+
 interface PendingOrderItem {
   payment_id: number;
   order_id: number;

@@ -3,6 +3,8 @@ import { LibraryRepository } from '@/modules/fulfillment/library.repository';
 import { getCurrentUser, DEMO_USERS, setSessionCookie } from '@/lib/session';
 import { getDatabaseExecutor } from '@/db/client';
 
+export const dynamic = 'force-dynamic';
+
 export default async function LibraryPage() {
   let user = await getCurrentUser();
   if (!user) {

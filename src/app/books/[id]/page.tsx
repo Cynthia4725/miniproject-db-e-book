@@ -4,6 +4,8 @@ import { CatalogRepository } from '@/modules/catalog/catalog.repository';
 import { BookDetailDto } from '@/modules/catalog/catalog.dto';
 import { addToCartAction } from '@/app/actions/cart.actions';
 
+export const dynamic = 'force-dynamic';
+
 export default async function BookDetailPage({
   params,
 }: {

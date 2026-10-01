@@ -3,6 +3,8 @@ import { notFound } from 'next/navigation';
 import { OrderRepository } from '@/modules/orders/order.repository';
 import { submitSlipAction } from '@/app/actions/cart.actions';
 
+export const dynamic = 'force-dynamic';
+
 export default async function OrderPaymentPage({
   params,
 }: {

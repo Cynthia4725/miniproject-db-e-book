@@ -2,6 +2,8 @@ import Link from 'next/link';
 import { getDatabaseExecutor } from '@/db/client';
 import { addToCartAction } from '@/app/actions/cart.actions';
 
+export const dynamic = 'force-dynamic';
+
 interface BookItem {
   id: number;
   title: string;
