@@ -38,3 +38,16 @@ export interface PublicDownloadTokenDto {
   maxDownloads: number;
   expiresAt: string;
 }
+
+export interface BookDownloadAuditStat {
+  bookId: number | string;
+  totalDownloads: number;
+  uniqueDownloaders: number;
+}
+
+export interface UserDownloadAuditStat {
+  userId: number | string;
+  totalDownloads: number;
+  uniqueBooksDownloaded: number;
+}
+

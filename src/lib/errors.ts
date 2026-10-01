@@ -44,3 +44,11 @@ export class ConflictError extends AppError {
     this.name = 'ConflictError';
   }
 }
+
+export class InvalidStateTransitionError extends ConflictError {
+  constructor(message: string) {
+    super(message, 'INVALID_STATE_TRANSITION');
+    this.name = 'InvalidStateTransitionError';
+  }
+}
+

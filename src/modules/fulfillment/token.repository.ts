@@ -1,11 +1,13 @@
 import { getDatabaseExecutor } from '@/db/client';
 import { generateUuidV4 } from '@/lib/uuid';
 import {
+  BookDownloadAuditStat,
   ClientTelemetryInput,
   DownloadTokenEntity,
   MintTokenInput,
   PublicDownloadTokenDto,
   TokenVerificationResult,
+  UserDownloadAuditStat,
 } from './token.dto';
 import { ExpiredError, ForbiddenError, NotFoundError } from '@/lib/errors';
 
@@ -140,6 +142,42 @@ export class DownloadTokenRepository {
     };
   }
 
+  async getDownloadAuditStatsByBook(): Promise<BookDownloadAuditStat[]> {
+    const query = `
+      SELECT 
+        book_id,
+        COUNT(*) AS total_downloads,
+        COUNT(DISTINCT user_id) AS unique_downloaders
+      FROM download_logs
+      GROUP BY book_id
+      ORDER BY total_downloads DESC;
+    `;
+    const rows = await this.db.query(query);
+    return rows.map((row) => ({
+      bookId: row.book_id,
+      totalDownloads: Number(row.total_downloads),
+      uniqueDownloaders: Number(row.unique_downloaders),
+    }));
+  }
+
+  async getDownloadAuditStatsByUser(): Promise<UserDownloadAuditStat[]> {
+    const query = `
+      SELECT 
+        user_id,
+        COUNT(*) AS total_downloads,
+        COUNT(DISTINCT book_id) AS unique_books_downloaded
+      FROM download_logs
+      GROUP BY user_id
+      ORDER BY total_downloads DESC;
+    `;
+    const rows = await this.db.query(query);
+    return rows.map((row) => ({
+      userId: row.user_id,
+      totalDownloads: Number(row.total_downloads),
+      uniqueBooksDownloaded: Number(row.unique_books_downloaded),
+    }));
+  }
+
   toPublicDto(token: DownloadTokenEntity): PublicDownloadTokenDto {
     const remaining = Math.max(0, token.maxDownloads - token.downloadCount);
     return {
@@ -150,3 +188,4 @@ export class DownloadTokenRepository {
     };
   }
 }
+

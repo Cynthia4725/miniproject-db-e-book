@@ -75,3 +75,30 @@ export interface DownloadLogRow {
   user_agent: string | null;
   downloaded_at: string | Date;
 }
+
+export type PaymentStatus = 'PENDING_REVIEW' | 'APPROVED' | 'REJECTED';
+
+export type PaymentMethod = 'PROMPTPAY' | 'CREDIT_CARD' | 'BANK_TRANSFER';
+
+export interface PaymentRow {
+  id: string | number;
+  order_id: string | number;
+  payment_method: string;
+  amount_paid: string | number;
+  slip_image_url: string;
+  transferred_at: string | Date;
+  status: PaymentStatus;
+  verified_by_user_id: string | number | null;
+  verified_at: string | Date | null;
+  rejection_reason: string | null;
+  created_at: string | Date;
+}
+
+export interface UserLibraryRow {
+  id: string | number;
+  user_id: string | number;
+  book_id: string | number;
+  order_id: string | number;
+  granted_at: string | Date;
+}
+

@@ -181,15 +181,30 @@
 - **การตัดสินใจของมนุษย์ (Human Decision)**:
   - อนุมัติการรันและยอมรับผลลัพธ์ของโค้ดและการทดสอบทั้งหมด
 
+### รอบที่ 15: Tracer-Bullet Ticket Breakdown for Spec-0002 (/to-tickets)
+- **วันที่**: 2026-10-02
+- **โจทย์ที่ป้อนให้ AI**: ย่อยเอกสารข้อกำหนด Spec-0002 (Order Payment Lifecycle and Decoupled Fulfillment) ออกเป็นชุดงานย่อยแบบ Tracer-Bullet Tickets
+- **สิ่งที่ AI นำเสนอ**:
+  - เสนอการซอยงานเป็น 3 Vertical Slices:
+    1. Ticket 01: Payment Slip Submission & State Transition Slice (เริ่มได้ทันที)
+    2. Ticket 02: Admin Payment Verification & Atomic Fulfillment Slice (บล็อกโดย Ticket 01)
+    3. Ticket 03: Gated Library Ownership & Download Audit Telemetry Slice (บล็อกโดย Ticket 02)
+  - สร้างไฟล์ Ticket ทั้ง 3 ฉบับพร้อม Acceptance Criteria ครบถ้วนใน `.scratch/0002-order-payment-fulfillment-state-machine/issues/`
+- **การตัดสินใจของมนุษย์ (Human Decision)**:
+  - ตรวจสอบและยืนยันการแบ่ง Tickets และลำดับการส่งมอบทั้งหมด
 
-
-
-
-
-
-
-
-
-
-
+### รอบที่ 16: Implementation & Test-Driven Development for Spec-0002 (/implement, /tdd)
+- **วันที่**: 2026-10-02
+- **โจทย์ที่ป้อนให้ AI**: ลงมือพัฒนาโค้ดตาม Tickets ของ Spec-0002 (Order Payment Lifecycle and Decoupled Fulfillment) ทั้ง 3 Tickets โดยยึดหลัก TDD (Red-Green-Refactor)
+- **สิ่งที่ AI นำเสนอ**:
+  - สร้างโมดูล [src/modules/payments/payment.repository.ts](file:///c:/Users/bond/Documents/miniproject-db-e-book/src/modules/payments/payment.repository.ts) และ DTO:
+    - Ticket 01: เพิ่ม `submitPaymentSlip` จัดการการส่งหลักฐานสลิปโอนเงิน บันทึกลงตาราง `payments` สถานะ `PENDING_REVIEW` และทรานซิชันสถานะคำสั่งซื้อจาก `PENDING` เป็น `PAYMENT_SUBMITTED` แบบอะตอมิก พร้อมระบบป้องกันทรานซิชันซ้ำหรือสั่งซื้อที่อยู่ในสถานะ Terminal
+    - Ticket 02: เพิ่ม `reviewPayment` ให้แอดมินอนุมัติหรือปฏิเสธคำสั่งซื้อ โดยหากอนุมัติจะอัปเดตสถานะเป็น `APPROVED` และ `PAID` พร้อมทั้งมอบกรรมสิทธิ์ดิจิทัลลงในตาราง `user_library` และสร้าง `download_tokens` อายุ 30 วัน โควตา 5 ครั้งทันที หากปฏิเสธต้องระบุเหตุผลและไม่สร้างสินทรัพย์ใดๆ
+  - พัฒนาโมดูล [src/modules/fulfillment/library.repository.ts](file:///c:/Users/bond/Documents/miniproject-db-e-book/src/modules/fulfillment/library.repository.ts) (Ticket 03):
+    - พัฒนา `getUserLibrary` กรองเฉพาะหนังสือที่มาจากคำสั่งซื้อที่ได้รับการอนุมัติ (`PAID`) เท่านั้น หนังสือที่ยังไม่จ่ายเงิน รอตรวจสอบ หรือถูกปฏิเสธจะไม่แสดงในคลังเด็ดขาด
+    - เพิ่มเมธอด Audit Telemetry สำหรับรวมสถิติการดาวน์โหลดรายหนังสือ (`getDownloadAuditStatsByBook`) และรายผู้ใช้ (`getDownloadAuditStatsByUser`) จากตาราง `download_logs`
+  - เขียนและรันชุดการทดสอบ TDD ทั้ง 3 Vertical Slices (รวม 25 เคสใหม่) ผ่าน 100% รวมชุดทดสอบของระบบเป็น 44 เคสผ่านฉลุย
+  - ตรวจสอบความถูกต้องของ Typecheck (`tsc --noEmit`) ปราศจากข้อผิดพลาด
+- **การตัดสินใจของมนุษย์ (Human Decision)**:
+  - สั่งเริ่มการอิมพลีเมนต์ตามสเปกและยอมรับผลการตรวจสอบการทำงานทั้งหมด
 
