@@ -1,0 +1,1262 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Database Architecture &amp; Physical Schema Specification · Neon E-Book Store</title>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500;600&family=Instrument+Serif:ital@0;1&family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --color-paper: #f8fafc;
+      --color-paper-card: #ffffff;
+      --color-paper-subtle: #f1f5f9;
+      --color-ink: #0f172a;
+      --color-ink-secondary: #334155;
+      --color-muted: #64748b;
+      --color-soft: #94a3b8;
+      --color-rule: rgba(15, 23, 42, 0.10);
+      --color-rule-strong: rgba(15, 23, 42, 0.20);
+      --color-emerald-primary: #059669;
+      --color-emerald-dark: #065f46;
+      --color-emerald-tint: rgba(5, 150, 105, 0.08);
+      --color-emerald-border: rgba(5, 150, 105, 0.35);
+      --color-accent-amber: #d97706;
+      --color-accent-coral: #eb6c36;
+      --color-accent-tint: rgba(235, 108, 54, 0.08);
+      --color-indigo-link: #2563eb;
+      --font-sans: 'Geist', 'Sarabun', system-ui, -apple-system, sans-serif;
+      --font-serif: 'Instrument Serif', Georgia, serif;
+      --font-mono: 'Geist Mono', ui-monospace, SFMono-Regular, monospace;
+    }
+
+    body {
+      font-family: var(--font-sans);
+      background-color: var(--color-paper);
+      color: var(--color-ink);
+      line-height: 1.6;
+      padding: 2.5rem 1.5rem;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 1440px;
+      margin: 0 auto;
+    }
+
+    /* Header Section */
+    .header {
+      margin-bottom: 2.25rem;
+      border-bottom: 1px solid var(--color-rule);
+      padding-bottom: 1.75rem;
+    }
+
+    .eyebrow-container {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+      margin-bottom: 0.6rem;
+    }
+
+    .eyebrow {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--color-emerald-dark);
+      background: var(--color-emerald-tint);
+      padding: 0.25rem 0.6rem;
+      border-radius: 4px;
+      border: 1px solid var(--color-emerald-border);
+    }
+
+    .meta-tag {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--color-muted);
+    }
+
+    h1 {
+      font-family: var(--font-serif);
+      font-size: clamp(2rem, 3.5vw + 1rem, 3.25rem);
+      font-weight: 400;
+      letter-spacing: -0.025em;
+      line-height: 1.15;
+      color: var(--color-ink);
+      margin-bottom: 0.75rem;
+    }
+
+    .subtitle {
+      font-size: 1.05rem;
+      color: var(--color-ink-secondary);
+      max-width: 88ch;
+      line-height: 1.65;
+    }
+
+    /* Architecture Summary Cards */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: 1.15fr 1fr 1fr;
+      gap: 1.25rem;
+      margin-bottom: 2.5rem;
+    }
+
+    @media (max-width: 960px) {
+      .cards-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .card {
+      background: var(--color-paper-card);
+      border-radius: 10px;
+      border: 1px solid var(--color-rule);
+      padding: 1.5rem;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+      transition: border-color 0.2s;
+    }
+
+    .card:hover {
+      border-color: var(--color-rule-strong);
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      margin-bottom: 0.75rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid var(--color-rule);
+    }
+
+    .card-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+
+    .card-dot.emerald { background: var(--color-emerald-primary); }
+    .card-dot.amber { background: var(--color-accent-amber); }
+    .card-dot.coral { background: var(--color-accent-coral); }
+
+    .card-title {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--color-ink);
+    }
+
+    .card-eyebrow {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--color-muted);
+      margin-bottom: 0.25rem;
+    }
+
+    .card-desc {
+      font-size: 0.85rem;
+      color: var(--color-ink-secondary);
+      line-height: 1.6;
+    }
+
+    .card-list {
+      list-style: none;
+      margin-top: 0.6rem;
+      font-size: 0.825rem;
+      color: var(--color-ink-secondary);
+    }
+
+    .card-list li {
+      position: relative;
+      padding-left: 1.1rem;
+      margin-bottom: 0.35rem;
+    }
+
+    .card-list li::before {
+      content: "—";
+      position: absolute;
+      left: 0;
+      color: var(--color-soft);
+    }
+
+    /* Diagram Section & Container */
+    .section-title-wrap {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .section-heading {
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: var(--color-ink);
+    }
+
+    .section-caption {
+      font-size: 0.85rem;
+      color: var(--color-muted);
+    }
+
+    .domain-badges {
+      display: flex;
+      gap: 0.4rem;
+      flex-wrap: wrap;
+    }
+
+    .domain-badge-item {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      font-weight: 500;
+      padding: 0.35rem 0.75rem;
+      border-radius: 6px;
+      border: 1px solid var(--color-rule);
+      background: var(--color-paper-card);
+      color: var(--color-ink-secondary);
+      text-decoration: none;
+      transition: all 0.15s ease;
+    }
+
+    .domain-badge-item:hover {
+      background: var(--color-paper-subtle);
+      border-color: var(--color-emerald-primary);
+      color: var(--color-emerald-dark);
+    }
+
+    .diagram-viewport {
+      background: #ffffff;
+      border: 1px solid var(--color-rule);
+      border-radius: 12px;
+      overflow-x: auto;
+      padding: 1.75rem;
+      margin-bottom: 2.5rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+    }
+
+    svg.main-diagram {
+      min-width: 1320px;
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    /* Legend Strip */
+    .legend-bar {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      background: var(--color-paper-subtle);
+      border: 1px solid var(--color-rule);
+      border-radius: 8px;
+      padding: 0.75rem 1.25rem;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      margin-top: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .legend-chip {
+      padding: 0.1rem 0.4rem;
+      border-radius: 2px;
+      font-size: 0.68rem;
+      border: 1px solid rgba(15, 23, 42, 0.3);
+      font-weight: 600;
+    }
+
+    .legend-chip.pk { background: #f0fdf4; border-color: #16a34a; color: #16a34a; }
+    .legend-chip.fk { background: #eff6ff; border-color: #2563eb; color: #2563eb; }
+    .legend-chip.uq { background: #fefce8; border-color: #ca8a04; color: #ca8a04; }
+    .legend-chip.cascade { background: var(--color-accent-tint); border-color: var(--color-accent-coral); color: var(--color-accent-coral); }
+
+    /* Tables Dictionary Section */
+    .dictionary-section {
+      margin-top: 3rem;
+      border-top: 1px solid var(--color-rule);
+      padding-top: 2rem;
+    }
+
+    .dictionary-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(420px, 1fr));
+      gap: 1.5rem;
+      margin-top: 1.5rem;
+    }
+
+    @media (max-width: 500px) {
+      .dictionary-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .dict-card {
+      background: #ffffff;
+      border: 1px solid var(--color-rule);
+      border-radius: 8px;
+      padding: 1.25rem;
+    }
+
+    .dict-card h3 {
+      font-family: var(--font-mono);
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--color-emerald-dark);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 0.5rem;
+    }
+
+    .dict-card .tag {
+      font-size: 0.65rem;
+      padding: 0.15rem 0.45rem;
+      border-radius: 4px;
+      background: var(--color-paper-subtle);
+      color: var(--color-muted);
+      font-weight: 500;
+    }
+
+    .dict-card p {
+      font-size: 0.8rem;
+      color: var(--color-ink-secondary);
+      margin-bottom: 0.75rem;
+    }
+
+    .dict-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.75rem;
+    }
+
+    .dict-table th {
+      text-align: left;
+      font-family: var(--font-mono);
+      font-weight: 600;
+      color: var(--color-muted);
+      border-bottom: 1px solid var(--color-rule);
+      padding: 0.35rem 0.25rem;
+    }
+
+    .dict-table td {
+      padding: 0.4rem 0.25rem;
+      border-bottom: 1px solid rgba(15, 23, 42, 0.05);
+      font-family: var(--font-mono);
+    }
+
+    .dict-table td.col-name {
+      color: var(--color-ink);
+      font-weight: 500;
+    }
+
+    .dict-table td.col-type {
+      color: var(--color-muted);
+    }
+
+    .dict-table td.col-rule {
+      color: var(--color-emerald-dark);
+      font-size: 0.7rem;
+    }
+
+    /* Footer */
+    .footer {
+      margin-top: 3.5rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--color-rule);
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--color-soft);
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <header class="header">
+      <div class="eyebrow-container">
+        <span class="eyebrow">Neon PostgreSQL · 3NF/BCNF Physical Schema</span>
+        <span class="meta-tag">PostgreSQL 16.x (Neon Serverless, aws-ap-southeast-1)</span>
+        <span class="meta-tag">·</span>
+        <span class="meta-tag">16 Tables · 26 Referential Constraints</span>
+      </div>
+      <h1>Database Architecture &amp; Physical Schema</h1>
+      <p class="subtitle">
+        เอกสารสถาปัตยกรรมฐานข้อมูลเชิงลึก แสดงผังความสัมพันธ์ทางกายภาพ (Physical Schema) ระดับคอลัมน์ 
+        กฎการเชื่อมโยง Foreign Key (Cascading / Restrict / Set Null), กลไกการประมวลผลธุรกรรม ACID (Transaction Runner), 
+        และกลยุทธ์ลูกผสมระบุตัวตน (Hybrid Identity Strategy) ของระบบร้านหนังสือดิจิทัล <strong>Neon E-Book Store</strong>
+      </p>
+    </header>
+
+    <!-- 3 Summary Editorial Cards -->
+    <div class="cards-grid">
+      <div class="card">
+        <p class="card-eyebrow">Runtime &amp; Execution Layer</p>
+        <div class="card-header">
+          <span class="card-dot emerald"></span>
+          <h2 class="card-title">Neon Serverless Client &amp; Pool</h2>
+        </div>
+        <p class="card-desc">
+          สถาปัตยกรรม <code style="font-family:var(--font-mono);font-size:0.8rem;">src/db/client.ts</code> เชื่อมต่อผ่าน <code style="font-family:var(--font-mono);font-size:0.8rem;">@neondatabase/serverless</code> 
+          ที่ปรับแต่งสำหรับ Vercel Serverless Function โดยเฉพาะ:
+        </p>
+        <ul class="card-list">
+          <li><strong>Zero Connection Leak</strong>: อาศัย HTTP/WebSocket connection pooling ไม่ต้องกังวลเรื่อง Max Clients ตัน</li>
+          <li><strong>Cold Start &lt; 15ms</strong>: ไม่ต้องสร้าง TCP Handshake ใหม่ทุกครั้งที่เกิด Serverless Invocation</li>
+          <li><strong>Sanitized Logging &amp; Error Mapper</strong>: แปลง PostgreSQL Error Codes (23505, 23503, 23514) เป็นโดเมน AppError อย่างปลอดภัย</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <p class="card-eyebrow">Transactional Safety</p>
+        <div class="card-header">
+          <span class="card-dot amber"></span>
+          <h2 class="card-title">ACID Transaction Runner</h2>
+        </div>
+        <p class="card-desc">
+          การทำงานแบบรวมศูนย์ใน <code style="font-family:var(--font-mono);font-size:0.8rem;">src/db/transaction.ts</code> ผ่านฟังก์ชัน <code style="font-family:var(--font-mono);font-size:0.8rem;">runInTransaction&lt;T&gt;()</code>:
+        </p>
+        <ul class="card-list">
+          <li><strong>Atomic Checkout</strong>: สร้าง Record ใน orders และ snapshot ราคาสินค้าใน order_items พร้อมกันแบบ All-or-Nothing</li>
+          <li><strong>Fulfillment Entitlement</strong>: อนุมัติสลิปโอนเงิน (payments.status='APPROVED') พร้อมออกสิทธิ์ใน user_library ทันทีในธุรกรรมเดียว</li>
+          <li><strong>Automatic Rollback</strong>: หากเกิดข้อผิดพลาดใด ๆ ระบบจะสั่ง ROLLBACK ทันที ป้องกันข้อมูลค้างสถานะไม่สมบูรณ์</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <p class="card-eyebrow">Relational Integrity</p>
+        <div class="card-header">
+          <span class="card-dot coral"></span>
+          <h2 class="card-title">Hybrid Identity &amp; 3NF Normalization</h2>
+        </div>
+        <p class="card-desc">
+          สถาปัตยกรรมโครงสร้างข้อมูลที่ผสมผสานประสิทธิภาพและการป้องกันภัยคุกคาม:
+        </p>
+        <ul class="card-list">
+          <li><strong>BIGINT Primary Keys</strong>: ทุกตารางใช้ IDENTITY BIGINT สำหรับการทำ B-Tree Indexing และ JOIN ที่รวดเร็วสูงสุด (O(1))</li>
+          <li><strong>UUID v4 Public Identifiers</strong>: orders.order_number และ download_tokens.token ใช้ UUID เพื่อป้องกัน Insecure Direct Object References (IDOR)</li>
+          <li><strong>Strict 3NF/BCNF</strong>: แยกความสัมพันธ์หนังสือ-หมวดหมู่-ผู้แต่งด้วย Junction Tables และตัด Transitive Dependency ทั้งหมด</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Main Schema Section Title & Controls -->
+    <div class="section-title-wrap">
+      <div>
+        <h2 class="section-heading">ผังโครงสร้างข้อมูลกายภาพ (Physical Relational Schema SVG)</h2>
+        <p class="section-caption">แสดงตารางจริง ชนิดข้อมูล SQL, ชิปข้อกำหนด (Constraints), และจุดเชื่อมต่อ Foreign Key ระดับคอลัมน์ (Column-Level FKs)</p>
+      </div>
+      <div class="domain-badges">
+        <a href="#table-books" class="domain-badge-item">1. แคตตาล็อก &amp; แท็กโซโนมี</a>
+        <a href="#table-users" class="domain-badge-item">2. สมาชิก &amp; ตะกร้าสินค้า</a>
+        <a href="#table-orders" class="domain-badge-item">3. คำสั่งซื้อ &amp; คูปอง</a>
+        <a href="#table-payments" class="domain-badge-item">4. การชำระเงิน &amp; คลัง e-Book</a>
+      </div>
+    </div>
+
+    <!-- Main SVG Diagram Viewport -->
+    <div class="diagram-viewport">
+      <svg class="main-diagram" viewBox="0 0 1360 880" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="db-schema-full-title db-schema-full-desc">
+        <title id="db-schema-full-title">E-Book Store Neon PostgreSQL Physical Database Schema</title>
+        <desc id="db-schema-full-desc">Complete physical relational database schema diagram with 16 normalized tables, column-level foreign key paths with orthogonal rounded elbows, SQL types, and constraints.</desc>
+        
+        <defs>
+          <!-- Arrow Markers -->
+          <marker id="arrow-default" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+            <polygon points="0 0, 8 3, 0 6" fill="#64748b"/>
+          </marker>
+          <marker id="arrow-cascade" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+            <polygon points="0 0, 8 3, 0 6" fill="#eb6c36"/>
+          </marker>
+          <marker id="arrow-restrict" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+            <polygon points="0 0, 8 3, 0 6" fill="#059669"/>
+          </marker>
+          <marker id="arrow-setnull" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+            <polygon points="0 0, 8 3, 0 6" fill="#2563eb"/>
+          </marker>
+
+          <!-- Drop Shadows & Filters -->
+          <filter id="box-shadow" x="-4%" y="-4%" width="108%" height="108%">
+            <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#0f172a" flood-opacity="0.04"/>
+          </filter>
+        </defs>
+
+        <!-- Canvas Background -->
+        <rect width="100%" height="100%" fill="#fafafa"/>
+
+        <!-- ========================================== -->
+        <!-- DOMAIN GROUP BOUNDARIES (Dashed Containers) -->
+        <!-- ========================================== -->
+        
+        <!-- Domain 1: Catalog & Taxonomy -->
+        <g id="domain-catalog-group">
+          <rect x="24" y="24" width="460" height="490" rx="10" fill="rgba(15, 23, 42, 0.015)" stroke="rgba(15, 23, 42, 0.15)" stroke-width="1" stroke-dasharray="4,4"/>
+          <text x="38" y="44" fill="#065f46" font-family="'Geist Mono', monospace" font-size="10" font-weight="700" letter-spacing="0.12em">DOMAIN 1: CATALOG &amp; TAXONOMY</text>
+        </g>
+
+        <!-- Domain 2: Users & Shopping Cart -->
+        <g id="domain-cart-group">
+          <rect x="508" y="24" width="370" height="400" rx="10" fill="rgba(15, 23, 42, 0.015)" stroke="rgba(15, 23, 42, 0.15)" stroke-width="1" stroke-dasharray="4,4"/>
+          <text x="522" y="44" fill="#065f46" font-family="'Geist Mono', monospace" font-size="10" font-weight="700" letter-spacing="0.12em">DOMAIN 2: USERS &amp; SHOPPING CART</text>
+        </g>
+
+        <!-- Domain 3: Orders, Coupons & Price Snapshot -->
+        <g id="domain-order-group">
+          <rect x="900" y="24" width="436" height="450" rx="10" fill="rgba(15, 23, 42, 0.015)" stroke="rgba(15, 23, 42, 0.15)" stroke-width="1" stroke-dasharray="4,4"/>
+          <text x="914" y="44" fill="#065f46" font-family="'Geist Mono', monospace" font-size="10" font-weight="700" letter-spacing="0.12em">DOMAIN 3: ORDERS, COUPONS &amp; PRICING</text>
+        </g>
+
+        <!-- Domain 4 & 5: Payments, Fulfillment & Security Auditing -->
+        <g id="domain-fulfillment-group">
+          <rect x="24" y="534" width="1312" height="320" rx="10" fill="rgba(15, 23, 42, 0.015)" stroke="rgba(15, 23, 42, 0.15)" stroke-width="1" stroke-dasharray="4,4"/>
+          <text x="38" y="554" fill="#065f46" font-family="'Geist Mono', monospace" font-size="10" font-weight="700" letter-spacing="0.12em">DOMAIN 4 &amp; 5: PAYMENTS, DIGITAL FULFILLMENT &amp; AUDIT LOGS</text>
+        </g>
+
+        <!-- ========================================== -->
+        <!-- FOREIGN KEY CONNECTORS (Drawn Before Tables) -->
+        <!-- ========================================== -->
+
+        <!-- 1. books.publisher_id -> publishers.id (ON DELETE SET NULL) -->
+        <path d="M 190,146 H 160 Q 152,146 152,138 V 102 Q 152,94 160,94 H 190" fill="none" stroke="#2563eb" stroke-width="1" marker-end="url(#arrow-setnull)"/>
+        
+        <!-- 2. book_categories.book_id -> books.id (ON DELETE CASCADE) -->
+        <path d="M 40,388 H 20 Q 12,388 12,380 V 176 Q 12,168 20,168 H 40" fill="none" stroke="#eb6c36" stroke-width="1.2" marker-end="url(#arrow-cascade)"/>
+        
+        <!-- 3. book_categories.category_id -> categories.id (ON DELETE CASCADE) -->
+        <path d="M 230,388 H 250 Q 258,388 258,380 V 314 Q 258,306 250,306 H 230" fill="none" stroke="#eb6c36" stroke-width="1.2" marker-end="url(#arrow-cascade)"/>
+
+        <!-- 4. carts.user_id -> users.id (ON DELETE CASCADE) -->
+        <path d="M 524,296 H 500 Q 492,296 492,288 V 110 Q 492,102 500,102 H 524" fill="none" stroke="#eb6c36" stroke-width="1.2" marker-end="url(#arrow-cascade)"/>
+
+        <!-- 5. cart_items.cart_id -> carts.id (ON DELETE CASCADE) -->
+        <path d="M 724,310 H 700 Q 692,310 692,302 V 296" fill="none" stroke="#eb6c36" stroke-width="1.2" marker-end="url(#arrow-cascade)"/>
+
+        <!-- 6. cart_items.book_id -> books.id (ON DELETE CASCADE) -->
+        <path d="M 724,334 H 490 Q 482,334 482,326 V 192 Q 482,184 474,184 H 270" fill="none" stroke="#eb6c36" stroke-width="1.2" marker-end="url(#arrow-cascade)"/>
+
+        <!-- 7. orders.user_id -> users.id (ON DELETE RESTRICT) -->
+        <path d="M 916,146 H 880 Q 872,146 872,138 V 102 Q 872,94 864,94 H 740" fill="none" stroke="#059669" stroke-width="1.2" marker-end="url(#arrow-restrict)"/>
+
+        <!-- 8. orders.coupon_id -> coupons.id (ON DELETE SET NULL) -->
+        <path d="M 1126,218 H 1150 Q 1158,218 1158,210 V 102 Q 1158,94 1166,94 H 1180" fill="none" stroke="#2563eb" stroke-width="1" marker-end="url(#arrow-setnull)"/>
+
+        <!-- 9. order_items.order_id -> orders.id (ON DELETE CASCADE) -->
+        <path d="M 1126,366 H 1150 Q 1158,366 1158,358 V 168 Q 1158,160 1150,160 H 1126" fill="none" stroke="#eb6c36" stroke-width="1.4" marker-end="url(#arrow-cascade)"/>
+
+        <!-- 10. order_items.book_id -> books.id (ON DELETE RESTRICT) -->
+        <path d="M 916,390 H 890 Q 882,390 882,430 V 460 Q 882,468 874,468 H 280 Q 272,468 272,460 V 216 H 270" fill="none" stroke="#059669" stroke-width="1.2" marker-end="url(#arrow-restrict)"/>
+
+        <!-- 11. payments.order_id -> orders.id (ON DELETE CASCADE) -->
+        <path d="M 160,634 H 140 Q 132,634 132,626 V 510 Q 132,502 140,502 H 980 Q 988,502 988,494 V 240 H 988" fill="none" stroke="#eb6c36" stroke-width="1.2" marker-end="url(#arrow-cascade)"/>
+
+        <!-- 12. user_library.order_id -> orders.id (ON DELETE RESTRICT) -->
+        <path d="M 400,658 H 380 Q 372,658 372,650 V 520 Q 372,512 380,512 H 1004 Q 1012,512 1012,504 V 240" fill="none" stroke="#059669" stroke-width="1.2" marker-end="url(#arrow-restrict)"/>
+
+        <!-- 13. user_library.user_id -> users.id (ON DELETE CASCADE) -->
+        <path d="M 400,634 H 360 Q 352,634 352,626 V 490 Q 352,482 360,482 H 630 Q 638,482 638,474 V 180" fill="none" stroke="#eb6c36" stroke-width="1.2" marker-end="url(#arrow-cascade)"/>
+
+        <!-- 14. download_tokens.user_id -> users.id (ON DELETE CASCADE) -->
+        <path d="M 680,634 H 660 Q 652,634 652,626 V 470 Q 652,462 660,462 H 670 Q 678,462 678,454 V 180" fill="none" stroke="#eb6c36" stroke-width="1.2" marker-end="url(#arrow-cascade)"/>
+
+        <!-- 15. download_logs.download_token_id -> download_tokens.id (ON DELETE SET NULL) -->
+        <path d="M 1020,634 H 950 Q 942,634 942,626 V 610 Q 942,602 934,602 H 910" fill="none" stroke="#2563eb" stroke-width="1" marker-end="url(#arrow-setnull)"/>
+
+        <!-- ========================================== -->
+        <!-- FK LABELS (Masked, 6-10px Gap)             -->
+        <!-- ========================================== -->
+        <g font-family="'Geist Mono', monospace" font-size="8" letter-spacing="0.06em">
+          <!-- books -> publishers -->
+          <rect x="122" y="114" width="60" height="12" rx="2" fill="#ffffff"/>
+          <text x="152" y="123" fill="#2563eb" text-anchor="middle">SET NULL</text>
+
+          <!-- orders.user_id -> users.id -->
+          <rect x="785" y="88" width="64" height="12" rx="2" fill="#ffffff"/>
+          <text x="817" y="97" fill="#059669" text-anchor="middle">RESTRICT</text>
+
+          <!-- order_items -> orders (CASCADE) -->
+          <rect x="1115" y="254" width="86" height="12" rx="2" fill="#ffffff"/>
+          <text x="1158" y="263" fill="#eb6c36" font-weight="600" text-anchor="middle">ON DELETE CASCADE</text>
+
+          <!-- carts -> users (CASCADE) -->
+          <rect x="450" y="200" width="84" height="12" rx="2" fill="#ffffff"/>
+          <text x="492" y="209" fill="#eb6c36" text-anchor="middle">ON DELETE CASCADE</text>
+
+          <!-- payments -> orders -->
+          <rect x="520" y="496" width="86" height="12" rx="2" fill="#ffffff"/>
+          <text x="563" y="505" fill="#eb6c36" text-anchor="middle">ON DELETE CASCADE</text>
+
+          <!-- download_logs -> download_tokens -->
+          <rect x="915" y="618" width="56" height="12" rx="2" fill="#ffffff"/>
+          <text x="943" y="627" fill="#2563eb" text-anchor="middle">SET NULL</text>
+        </g>
+
+        <!-- ========================================== -->
+        <!-- TABLE 1: public.books (Catalog Anchor)     -->
+        <!-- ========================================== -->
+        <g id="table-books" filter="url(#box-shadow)">
+          <rect x="40" y="60" width="230" height="216" rx="6" fill="#ffffff" stroke="#059669" stroke-width="1.2"/>
+          <!-- Header -->
+          <rect x="40" y="60" width="230" height="28" rx="6" fill="rgba(5, 150, 105, 0.08)"/>
+          <rect x="40" y="80" width="230" height="8" fill="rgba(5, 150, 105, 0.08)"/>
+          <line x1="40" y1="88" x2="270" y2="88" stroke="rgba(5, 150, 105, 0.3)" stroke-width="1"/>
+          <text x="52" y="78" fill="#065f46" font-family="'Geist', sans-serif" font-size="11" font-weight="700">public.books</text>
+          <rect x="222" y="68" width="38" height="12" rx="2" fill="#ffffff" stroke="#059669" stroke-width="0.8"/>
+          <text x="241" y="77" fill="#059669" font-family="'Geist Mono', monospace" font-size="7.5" font-weight="600" text-anchor="middle">TABLE</text>
+          
+          <!-- Rows (24px each) -->
+          <!-- Row 1: id (PK) -->
+          <text x="52" y="104" fill="#0f172a" font-family="'Geist', sans-serif" font-size="11" font-weight="600">id</text>
+          <rect x="156" y="96" width="18" height="11" rx="2" fill="#dcfce7" stroke="#16a34a" stroke-width="0.7"/>
+          <text x="165" y="105" fill="#16a34a" font-family="'Geist Mono', monospace" font-size="7" font-weight="700" text-anchor="middle">PK</text>
+          <text x="258" y="104" fill="#64748b" font-family="'Geist Mono', monospace" font-size="8.5" text-anchor="end">bigint</text>
+
+          <!-- Row 2: title (NN) -->
+          <rect x="40" y="112" width="230" height="24" fill="rgba(15, 23, 42, 0.02)"/>
+          <text x="52" y="128" fill="#0f172a" font-family="'Geist', sans-serif" font-size="11">title</text>
+          <rect x="156" y="120" width="18" height="11" rx="2" fill="#f1f5f9" stroke="#94a3b8" stroke-width="0.7"/>
+          <text x="165" y="129" fill="#475569" font-family="'Geist Mono', monospace" font-size="7" text-anchor="middle">NN</text>
+          <text x="258" y="128" fill="#64748b" font-family="'Geist Mono', monospace" font-size="8.5" text-anchor="end">varchar(255)</text>
+
+          <!-- Row 3: publisher_id (FK) -->
+          <text x="52" y="152" fill="#0f172a" font-family="'Geist', sans-serif" font-size="11">publisher_id</text>
+          <rect x="156" y="144" width="18" height="11" rx="2" fill="#eff6ff" stroke="#2563eb" stroke-width="0.7"/>
+          <text x="165" y="153" fill="#2563eb" font-family="'Geist Mono', monospace" font-size="7" font-weight="700" text-anchor="middle">FK</text>
+          <text x="258" y="152" fill="#64748b" font-family="'Geist Mono', monospace" font-size="8.5" text-anchor="end">bigint</text>
+
+          <!-- Row 4: price (CHK) -->
+          <rect x="40" y="160" width="230" height="24" fill="rgba(15, 23, 42, 0.02)"/>
+          <text x="52" y="176" fill="#0f172a" font-family="'Geist', sans-serif" font-size="11">price</text>
+          <text x="258" y="176" fill="#64748b" font-family="'Geist Mono', monospace" font-size="8.5" text-anchor="end">numeric(10,2)</text>
+
+          <!-- Row 5: file_url -->
+          <text x="52" y="200" fill="#0f172a" font-family="'Geist', sans-serif" font-size="11">file_url</text>
+          <text x="258" y="200" fill="#64748b" font-family="'Geist Mono', monospace" font-size="8.5" text-anchor="end">text</text>
+
+          <!-- Row 6: file_format (PDF/EPUB) -->
+          <rect x="40" y="208" width="230" height="24" fill="rgba(15, 23, 42, 0.02)"/>
+          <text x="52" y="224" fill="#0f172a" font-family="'Geist', sans-serif" font-size="11">file_format</text>
+          <text x="258" y="224" fill="#64748b" font-family="'Geist Mono', monospace" font-size="8.5" text-anchor="end">varchar(10)</text>
+
+          <!-- Overflow -->
+          <line x1="40" y1="232" x2="270" y2="232" stroke="rgba(15, 23, 42, 0.1)" stroke-width="0.8"/>
+          <text x="135" y="258" fill="#94a3b8" font-family="'Geist Mono', monospace" font-size="8" text-anchor="middle">+ 8 more columns (isbn, cover, size...)</text>
+        </g>
+
+        <!-- ========================================== -->
+        <!-- TABLE 2: public.publishers                 -->
+        <!-- ========================================== -->
+        <g id="table-publishers" filter="url(#box-shadow)">
+          <rect x="290" y="60" width="180" height="100" rx="6" fill="#ffffff" stroke="#334155" stroke-width="0.9"/>
+          <rect x="290" y="60" width="180" height="26" rx="6" fill="rgba(15, 23, 42, 0.04)"/>
+          <rect x="290" y="78" width="180" height="8" fill="rgba(15, 23, 42, 0.04)"/>
+          <line x1="290" y1="86" x2="470" y2="86" stroke="rgba(15, 23, 42, 0.15)" stroke-width="1"/>
+          <text x="300" y="77" fill="#0f172a" font-family="'Geist', sans-serif" font-size="11" font-weight="600">publishers</text>
+          
+          <!-- id -->
+          <text x="300" y="102" fill="#0f172a" font-size="10.5">id</text>
+          <rect x="360" y="94" width="16" height="11" rx="2" fill="#dcfce7" stroke="#16a34a" stroke-width="0.7"/>
+          <text x="368" y="103" fill="#16a34a" font-family="'Geist Mono', monospace" font-size="7" font-weight="700" text-anchor="middle">PK</text>
+          <text x="460" y="102" fill="#64748b" font-family="'Geist Mono', monospace" font-size="8.5" text-anchor="end">bigint</text>
+
+          <!-- name -->
+          <rect x="290" y="110" width="180" height="24" fill="rgba(15, 23, 42, 0.02)"/>
+          <text x="300" y="126" fill="#0f172a" font-size="10.5">name</text>
+          <rect x="360" y="118" width="16" height="11" rx="2" fill="#fefce8" stroke="#ca8a04" stroke-width="0.7"/>
+          <text x="368" y="127" fill="#ca8a04" font-family="'Geist Mono', monospace" font-size="7" font-weight="700" text-anchor="middle">UQ</text>
+          <text x="460" y="126" fill="#64748b" font-family="'Geist Mono', monospace" font-size="8.5" text-anchor="end">varchar(150)</text>
+
+          <!-- contact_email -->
+          <text x="300" y="150" fill="#0f172a" font-size="10.5">contact_email</text>
+          <text x="460" y="150" fill="#64748b" font-family="'Geist Mono', monospace" font-size="8.5" text-anchor="end">varchar(255)</text>
+        </g>
+
+        <!-- ========================================== -->
+        <!-- TABLE 3: public.categories                 -->
+        <!-- ========================================== -->
+        <g id="table-categories" filter="url(#box-shadow)">
+          <rect x="290" y="180" width="180" height="100" rx="6" fill="#ffffff" stroke="#334155" stroke-width="0.9"/>
+          <rect x="290" y="180" width="180" height="26" rx="6" fill="rgba(15, 23, 42, 0.04)"/>
+          <rect x="290" y="198" width="180" height="8" fill="rgba(15, 23, 42, 0.04)"/>
+          <line x1="290" y1="206" x2="470" y2="206" stroke="rgba(15, 23, 42, 0.15)" stroke-width="1"/>
+          <text x="300" y="197" fill="#0f172a" font-family="'Geist', sans-serif" font-size="11" font-weight="600">categories</text>
+          
+          <text x="300" y="222" fill="#0f172a" font-size="10.5">id</text>
+          <rect x="360" y="214" width="16" height="11" rx="2" fill="#dcfce7" stroke="#16a34a" stroke-width="0.7"/>
+          <text x="368" y="223" fill="#16a34a" font-family="'Geist Mono', monospace" font-size="7" font-weight="700" text-anchor="middle">PK</text>
+          <text x="460" y="222" fill="#64748b" font-family="'Geist Mono', monospace" font-size="8.5" text-anchor="end">bigint</text>
+
+          <rect x="290" y="230" width="180" height="24" fill="rgba(15, 23, 42, 0.02)"/>
+          <text x="300" y="246" fill="#0f172a" font-size="10.5">name</text>
+          <rect x="360" y="238" width="16" height="11" rx="2" fill="#fefce8" stroke="#ca8a04" stroke-width="0.7"/>
+          <text x="368" y="247" fill="#ca8a04" font-family="'Geist Mono', monospace" font-size="7" font-weight="700" text-anchor="middle">UQ</text>
+          <text x="460" y="246" fill="#64748b" font-family="'Geist Mono', monospace" font-size="8.5" text-anchor="end">varchar(100)</text>
+
+          <text x="300" y="270" fill="#0f172a" font-size="10.5">slug</text>
+          <rect x="360" y="262" width="16" height="11" rx="2" fill="#fefce8" stroke="#ca8a04" stroke-width="0.7"/>
+          <text x="368" y="271" fill="#ca8a04" font-family="'Geist Mono', monospace" font-size="7" font-weight="700" text-anchor="middle">UQ</text>
+          <text x="460" y="270" fill="#64748b" font-family="'Geist Mono', monospace" font-size="8.5" text-anchor="end">varchar(100)</text>
+        </g>
+
+        <!-- ========================================== -->
+        <!-- TABLE 4: book_categories (Junction 3NF)    -->
+        <!-- ========================================== -->
+        <g id="table-book-categories" filter="url(#box-shadow)">
+          <rect x="40" y="300" width="210" height="88" rx="6" fill="#ffffff" stroke="#eb6c36" stroke-width="1"/>
+          <rect x="40" y="300" width="210" height="26" rx="6" fill="rgba(235, 108, 54, 0.08)"/>
+          <rect x="40" y="318" width="210" height="8" fill="rgba(235, 108, 54, 0.08)"/>
+          <line x1="40" y1="326" x2="250" y2="326" stroke="rgba(235, 108, 54, 0.3)" stroke-width="1"/>
+          <text x="50" y="317" fill="#eb6c36" font-family="'Geist', sans-serif" font-size="10.5" font-weight="700">book_categories (3NF)</text>
+
+          <!-- book_id (CPK, FK) -->
+          <text x="50" y="342" fill="#0f172a" font-size="10.5">book_id</text>
+          <rect x="135" y="334" width="22" height="11" rx="2" fill="#eff6ff" stroke="#2563eb" stroke-width="0.7"/>
+          <text x="146" y="343" fill="#2563eb" font-family="'Geist Mono', monospace" font-size="7" font-weight="700" text-anchor="middle">CPK</text>
+          <text x="240" y="342" fill="#64748b" font-family="'Geist Mono', monospace" font-size="8.5" text-anchor="end">bigint</text>
+
+          <!-- category_id (CPK, FK) -->
+          <rect x="40" y="350" width="210" height="24" fill="rgba(15, 23, 42, 0.02)"/>
+          <text x="50" y="366" fill="#0f172a" font-size="10.5">category_id</text>
+          <rect x="135" y="358" width="22" height="11" rx="2" fill="#eff6ff" stroke="#2563eb" stroke-width="0.7"/>
+          <text x="146" y="367" fill="#2563eb" font-family="'Geist Mono', monospace" font-size="7" font-weight="700" text-anchor="middle">CPK</text>
+          <text x="240" y="366" fill="#64748b" font-family="'Geist Mono', monospace" font-size="8.5" text-anchor="end">bigint</text>
+        </g>
+
+        <!-- ========================================== -->
+        <!-- TABLE 5: authors & book_authors (Compact)  -->
+        <!-- ========================================== -->
+        <g id="table-authors" filter="url(#box-shadow)">
+          <rect x="40" y="410" width="210" height="84" rx="6" fill="#ffffff" stroke="#334155" stroke-width="0.9"/>
+          <rect x="40" y="410" width="210" height="24" rx="6" fill="rgba(15, 23, 42, 0.04)"/>
+          <rect x="40" y="426" width="210" height="8" fill="rgba(15, 23, 42, 0.04)"/>
+          <line x1="40" y1="434" x2="250" y2="434" stroke="rgba(15, 23, 42, 0.15)" stroke-width="1"/>
+          <text x="50" y="425" fill="#0f172a" font-family="'Geist', sans-serif" font-size="10.5" font-weight="600">authors / book_authors</text>
+
+          <text x="50" y="450" fill="#0f172a" font-size="10">id / author_id</text>
+          <text x="240" y="450" fill="#64748b" font-family="'Geist Mono', monospace" font-size="8" text-anchor="end">bigint (PK/FK)</text>
+
+          <rect x="40" y="456" width="210" height="20" fill="rgba(15, 23, 42, 0.02)"/>
+          <text x="50" y="470" fill="#0f172a" font-size="10">name / bio / role</text>
+          <text x="240" y="470" fill="#64748b" font-family="'Geist Mono', monospace" font-size="8" text-anchor="end">varchar / text</text>
+        </g>
+
+        <!-- ========================================== -->
+        <!-- TABLE 6: public.users (Customer/Admin)     -->
+        <!-- ========================================== -->
+        <g id="table-users" filter="url(#box-shadow)">
+          <rect x="524" y="60" width="220" height="152" rx="6" fill="#ffffff" stroke="#059669" stroke-width="1.2"/>
+          <rect x="524" y="60" width="220" height="28" rx="6" fill="rgba(5, 150, 105, 0.08)"/>
+          <rect x="524" y="80" width="220" height="8" fill="rgba(5, 150, 105, 0.08)"/>
+          <line x1="524" y1="88" x2="744" y2="88" stroke="rgba(5, 150, 105, 0.3)" stroke-width="1"/>
+          <text x="536" y="78" fill="#065f46" font-family="'Geist', sans-serif" font-size="11" font-weight="700">public.users</text>
+          <rect x="696" y="68" width="38" height="12" rx="2" fill="#ffffff" stroke="#059669" stroke-width="0.8"/>
+          <text x="715" y="77" fill="#059669" font-family="'Geist Mono', monospace" font-size="7.5" font-weight="600" text-anchor="middle">TABLE</text>
+
+          <!-- id -->
+          <text x="536" y="104" fill="#0f172a" font-size="11" font-weight="600">id</text>
+          <rect x="626" y="96" width="18" height="11" rx="2" fill="#dcfce7" stroke="#16a34a" stroke-width="0.7"/>
+          <text x="635" y="105" fill="#16a34a" font-family="'Geist Mono', monospace" font-size="7" font-weight="700" text-anchor="middle">PK</text>
+          <text x="732" y="104" fill="#64748b" font-family="'Geist Mono', monospace" font-size="8.5" text-anchor="end">bigint</text>
+
+          <!-- email -->
+          <rect x="524" y="112" width="220" height="24" fill="rgba(15, 23, 42, 0.02)"/>
+          <text x="536" y="128" fill="#0f172a" font-size="11">email</text>
+          <rect x="626" y="120" width="18" height="11" rx="2" fill="#fefce8" stroke="#ca8a04" stroke-width="0.7"/>
+          <text x="635" y="129" fill="#ca8a04" font-family="'Geist Mono', monospace" font-size="7" font-weight="700" text-anchor="middle">UQ</text>
+          <text x="732" y="128" fill="#64748b" font-family="'Geist Mono', monospace" font-size="8.5" text-anchor="end">varchar(255)</text>
+
+          <!-- password_hash -->
+          <text x="536" y="152" fill="#0f172a" font-size="11">password_hash</text>
+          <text x="732" y="152" fill="#64748b" font-family="'Geist Mono', monospace" font-size="8.5" text-anchor="end">varchar(255)</text>
+
+          <!-- full_name -->
+          <rect x="524" y="160" width="220" height="24" fill="rgba(15, 23, 42, 0.02)"/>
+          <text x="536" y="176" fill="#0f172a" font-size="11">full_name</text>
+          <text x="732" y="176" fill="#64748b" font-family="'Geist Mono', monospace" font-size="8.5" text-anchor="end">varchar(150)</text>
+
+          <!-- role -->
+          <text x="536" y="200" fill="#0f172a" font-size="11">role</text>
+          <text x="732" y="200" fill="#64748b" font-family="'Geist Mono', monospace" font-size="8.5" text-anchor="end">'customer'|'admin'</text>
+        </g>
+
+        <!-- ========================================== -->
+        <!-- TABLE 7: public.carts & cart_items         -->
+        <!-- ========================================== -->
+        <g id="table-carts" filter="url(#box-shadow)">
+          <rect x="524" y="240" width="170" height="80" rx="6" fill="#ffffff" stroke="#334155" stroke-width="0.9"/>
+          <rect x="524" y="240" width="170" height="24" rx="6" fill="rgba(15, 23, 42, 0.04)"/>
+          <rect x="524" y="256" width="170" height="8" fill="rgba(15, 23, 42, 0.04)"/>
+          <line x1="524" y1="264" x2="694" y2="264" stroke="rgba(15, 23, 42, 0.15)" stroke-width="1"/>
+          <text x="534" y="255" fill="#0f172a" font-size="10.5" font-weight="600">public.carts</text>
+
+          <text x="534" y="280" fill="#0f172a" font-size="10.5">id</text>
+          <rect x="590" y="272" width="16" height="11" rx="2" fill="#dcfce7" stroke="#16a34a" stroke-width="0.7"/>
+          <text x="598" y="281" fill="#16a34a" font-family="'Geist Mono', monospace" font-size="7" font-weight="700" text-anchor="middle">PK</text>
+          <text x="684" y="280" fill="#64748b" font-family="'Geist Mono', monospace" font-size="8.5" text-anchor="end">bigint</text>
+
+          <rect x="524" y="288" width="170" height="24" fill="rgba(15, 23, 42, 0.02)"/>
+          <text x="534" y="304" fill="#0f172a" font-size="10.5">user_id</text>
+          <rect x="590" y="296" width="16" height="11" rx="2" fill="#eff6ff" stroke="#2563eb" stroke-width="0.7"/>
+          <text x="598" y="305" fill="#2563eb" font-family="'Geist Mono', monospace" font-size="7" font-weight="700" text-anchor="middle">FK</text>
+          <text x="684" y="304" fill="#64748b" font-family="'Geist Mono', monospace" font-size="8.5" text-anchor="end">bigint (UQ)</text>
+        </g>
+
+        <g id="table-cart-items" filter="url(#box-shadow)">
+          <rect x="714" y="240" width="150" height="110" rx="6" fill="#ffffff" stroke="#eb6c36" stroke-width="1"/>
+          <rect x="714" y="240" width="150" height="24" rx="6" fill="rgba(235, 108, 54, 0.08)"/>
+          <rect x="714" y="256" width="150" height="8" fill="rgba(235, 108, 54, 0.08)"/>
+          <line x1="714" y1="264" x2="864" y2="264" stroke="rgba(235, 108, 54, 0.3)" stroke-width="1"/>
+          <text x="724" y="255" fill="#eb6c36" font-size="10.5" font-weight="700">public.cart_items</text>
+
+          <text x="724" y="280" fill="#0f172a" font-size="10">id</text>
+          <text x="854" y="280" fill="#64748b" font-family="'Geist Mono', monospace" font-size="8.5" text-anchor="end">bigint (PK)</text>
+
+          <rect x="714" y="288" width="150" height="24" fill="rgba(15, 23, 42, 0.02)"/>
+          <text x="724" y="304" fill="#0f172a" font-size="10">cart_id</text>
+          <text x="854" y="304" fill="#2563eb" font-family="'Geist Mono', monospace" font-size="8.5" text-anchor="end">bigint (FK)</text>
+
+          <text x="724" y="328" fill="#0f172a" font-size="10">book_id</text>
+          <text x="854" y="328" fill="#2563eb" font-family="'Geist Mono', monospace" font-size="8.5" text-anchor="end">bigint (FK)</text>
+        </g>
+
+        <!-- ========================================== -->
+        <!-- TABLE 8: public.orders (Hybrid Identity)   -->
+        <!-- ========================================== -->
+        <g id="table-orders" filter="url(#box-shadow)">
+          <rect x="916" y="60" width="220" height="230" rx="6" fill="#ffffff" stroke="#059669" stroke-width="1.2"/>
+          <rect x="916" y="60" width="220" height="28" rx="6" fill="rgba(5, 150, 105, 0.08)"/>
+          <rect x="916" y="80" width="220" height="8" fill="rgba(5, 150, 105, 0.08)"/>
+          <line x1="916" y1="88" x2="1136" y2="88" stroke="rgba(5, 150, 105, 0.3)" stroke-width="1"/>
+          <text x="928" y="78" fill="#065f46" font-family="'Geist', sans-serif" font-size="11" font-weight="700">public.orders (Hybrid ID)</text>
+          <rect x="1088" y="68" width="38" height="12" rx="2" fill="#ffffff" stroke="#059669" stroke-width="0.8"/>
+          <text x="1107" y="77" fill="#059669" font-family="'Geist Mono', monospace" font-size="7.5" font-weight="600" text-anchor="middle">TABLE</text>
+
+          <!-- id (PK) -->
+          <text x="928" y="104" fill="#0f172a" font-size="11" font-weight="600">id</text>
+          <rect x="1022" y="96" width="18" height="11" rx="2" fill="#dcfce7" stroke="#16a34a" stroke-width="0.7"/>
+          <text x="1031" y="105" fill="#16a34a" font-family="'Geist Mono', monospace" font-size="7" font-weight="700" text-anchor="middle">PK</text>
+          <text x="1124" y="104" fill="#64748b" font-family="'Geist Mono', monospace" font-size="8.5" text-anchor="end">bigint</text>
+
+          <!-- order_number (UUID Public ID) -->
+          <rect x="916" y="112" width="220" height="24" fill="rgba(15, 23, 42, 0.02)"/>
+          <text x="928" y="128" fill="#0f172a" font-size="11">order_number</text>
+          <rect x="1022" y="120" width="18" height="11" rx="2" fill="#fefce8" stroke="#ca8a04" stroke-width="0.7"/>
+          <text x="1031" y="129" fill="#ca8a04" font-family="'Geist Mono', monospace" font-size="7" font-weight="700" text-anchor="middle">UQ</text>
+          <text x="1124" y="128" fill="#64748b" font-family="'Geist Mono', monospace" font-size="8.5" text-anchor="end">uuid / varchar</text>
+
+          <!-- user_id (FK RESTRICT) -->
+          <text x="928" y="152" fill="#0f172a" font-size="11">user_id</text>
+          <rect x="1022" y="144" width="18" height="11" rx="2" fill="#eff6ff" stroke="#2563eb" stroke-width="0.7"/>
+          <text x="1031" y="153" fill="#2563eb" font-family="'Geist Mono', monospace" font-size="7" font-weight="700" text-anchor="middle">FK</text>
+          <text x="1124" y="152" fill="#64748b" font-family="'Geist Mono', monospace" font-size="8.5" text-anchor="end">bigint</text>
+
+          <!-- subtotal_amount -->
+          <rect x="916" y="160" width="220" height="24" fill="rgba(15, 23, 42, 0.02)"/>
+          <text x="928" y="176" fill="#0f172a" font-size="11">subtotal_amount</text>
+          <text x="1124" y="176" fill="#64748b" font-family="'Geist Mono', monospace" font-size="8.5" text-anchor="end">numeric(10,2)</text>
+
+          <!-- discount_amount -->
+          <text x="928" y="200" fill="#0f172a" font-size="11">discount_amount</text>
+          <text x="1124" y="200" fill="#64748b" font-family="'Geist Mono', monospace" font-size="8.5" text-anchor="end">numeric(10,2)</text>
+
+          <!-- net_amount -->
+          <rect x="916" y="208" width="220" height="24" fill="rgba(15, 23, 42, 0.02)"/>
+          <text x="928" y="224" fill="#0f172a" font-size="11">net_amount</text>
+          <text x="1124" y="224" fill="#64748b" font-family="'Geist Mono', monospace" font-size="8.5" text-anchor="end">numeric(10,2)</text>
+
+          <!-- coupon_id -->
+          <text x="928" y="248" fill="#0f172a" font-size="11">coupon_id</text>
+          <text x="1124" y="248" fill="#64748b" font-family="'Geist Mono', monospace" font-size="8.5" text-anchor="end">bigint (FK)</text>
+
+          <!-- order_status -->
+          <rect x="916" y="256" width="220" height="24" fill="rgba(15, 23, 42, 0.02)"/>
+          <text x="928" y="272" fill="#0f172a" font-size="11">order_status</text>
+          <text x="1124" y="272" fill="#64748b" font-family="'Geist Mono', monospace" font-size="8.5" text-anchor="end">varchar(30)</text>
+        </g>
+
+        <!-- ========================================== -->
+        <!-- TABLE 9: coupons & order_items             -->
+        <!-- ========================================== -->
+        <g id="table-coupons" filter="url(#box-shadow)">
+          <rect x="1160" y="60" width="160" height="100" rx="6" fill="#ffffff" stroke="#334155" stroke-width="0.9"/>
+          <rect x="1160" y="60" width="160" height="26" rx="6" fill="rgba(15, 23, 42, 0.04)"/>
+          <rect x="1160" y="78" width="160" height="8" fill="rgba(15, 23, 42, 0.04)"/>
+          <line x1="1160" y1="86" x2="1320" y2="86" stroke="rgba(15, 23, 42, 0.15)" stroke-width="1"/>
+          <text x="1170" y="77" fill="#0f172a" font-size="10.5" font-weight="600">public.coupons</text>
+
+          <text x="1170" y="102" fill="#0f172a" font-size="10.5">id</text>
+          <text x="1310" y="102" fill="#64748b" font-family="'Geist Mono', monospace" font-size="8.5" text-anchor="end">bigint (PK)</text>
+
+          <rect x="1160" y="110" width="160" height="24" fill="rgba(15, 23, 42, 0.02)"/>
+          <text x="1170" y="126" fill="#0f172a" font-size="10.5">code</text>
+          <text x="1310" y="126" fill="#ca8a04" font-family="'Geist Mono', monospace" font-size="8.5" text-anchor="end">UQ varchar</text>
+
+          <text x="1170" y="150" fill="#0f172a" font-size="10.5">discount_value</text>
+          <text x="1310" y="150" fill="#64748b" font-family="'Geist Mono', monospace" font-size="8.5" text-anchor="end">numeric(10,2)</text>
+        </g>
+
+        <!-- Order Items (Price Snapshot) -->
+        <g id="table-order-items" filter="url(#box-shadow)">
+          <rect x="916" y="320" width="220" height="110" rx="6" fill="#ffffff" stroke="#eb6c36" stroke-width="1.2"/>
+          <rect x="916" y="320" width="220" height="26" rx="6" fill="rgba(235, 108, 54, 0.08)"/>
+          <rect x="916" y="338" width="220" height="8" fill="rgba(235, 108, 54, 0.08)"/>
+          <line x1="916" y1="346" x2="1136" y2="346" stroke="rgba(235, 108, 54, 0.3)" stroke-width="1"/>
+          <text x="928" y="337" fill="#eb6c36" font-family="'Geist', sans-serif" font-size="11" font-weight="700">order_items (Price Snapshot)</text>
+
+          <!-- id -->
+          <text x="928" y="362" fill="#0f172a" font-size="10.5">id</text>
+          <text x="1124" y="362" fill="#64748b" font-family="'Geist Mono', monospace" font-size="8.5" text-anchor="end">bigint (PK)</text>
+
+          <!-- order_id (FK CASCADE) -->
+          <rect x="916" y="370" width="220" height="24" fill="rgba(15, 23, 42, 0.02)"/>
+          <text x="928" y="386" fill="#0f172a" font-size="10.5">order_id</text>
+          <text x="1124" y="386" fill="#eb6c36" font-family="'Geist Mono', monospace" font-size="8.5" text-anchor="end">FK (CASCADE)</text>
+
+          <!-- book_id (FK RESTRICT) -->
+          <text x="928" y="410" fill="#0f172a" font-size="10.5">book_id</text>
+          <text x="1124" y="410" fill="#059669" font-family="'Geist Mono', monospace" font-size="8.5" text-anchor="end">FK (RESTRICT)</text>
+
+          <!-- unit_price (Frozen Snapshot) -->
+          <rect x="916" y="418" width="220" height="24" fill="rgba(15, 23, 42, 0.02)"/>
+          <text x="928" y="434" fill="#0f172a" font-size="10.5">unit_price</text>
+          <text x="1124" y="434" fill="#64748b" font-family="'Geist Mono', monospace" font-size="8.5" text-anchor="end">numeric(10,2)</text>
+        </g>
+
+        <!-- ========================================== -->
+        <!-- TABLE 10: payments (Domain 4)              -->
+        <!-- ========================================== -->
+        <g id="table-payments" filter="url(#box-shadow)">
+          <rect x="40" y="580" width="220" height="170" rx="6" fill="#ffffff" stroke="#334155" stroke-width="1"/>
+          <rect x="40" y="580" width="220" height="26" rx="6" fill="rgba(15, 23, 42, 0.05)"/>
+          <rect x="40" y="598" width="220" height="8" fill="rgba(15, 23, 42, 0.05)"/>
+          <line x1="40" y1="606" x2="260" y2="606" stroke="rgba(15, 23, 42, 0.15)" stroke-width="1"/>
+          <text x="52" y="597" fill="#0f172a" font-size="11" font-weight="700">public.payments</text>
+
+          <text x="52" y="622" fill="#0f172a" font-size="10.5">id</text>
+          <text x="248" y="622" fill="#64748b" font-family="'Geist Mono', monospace" font-size="8.5" text-anchor="end">bigint (PK)</text>
+
+          <rect x="40" y="630" width="220" height="24" fill="rgba(15, 23, 42, 0.02)"/>
+          <text x="52" y="646" fill="#0f172a" font-size="10.5">order_id</text>
+          <text x="248" y="646" fill="#eb6c36" font-family="'Geist Mono', monospace" font-size="8.5" text-anchor="end">FK (CASCADE)</text>
+
+          <text x="52" y="670" fill="#0f172a" font-size="10.5">amount_paid</text>
+          <text x="248" y="670" fill="#64748b" font-family="'Geist Mono', monospace" font-size="8.5" text-anchor="end">numeric(10,2)</text>
+
+          <rect x="40" y="678" width="220" height="24" fill="rgba(15, 23, 42, 0.02)"/>
+          <text x="52" y="694" fill="#0f172a" font-size="10.5">slip_image_url</text>
+          <text x="248" y="694" fill="#64748b" font-family="'Geist Mono', monospace" font-size="8.5" text-anchor="end">text (Base64)</text>
+
+          <text x="52" y="718" fill="#0f172a" font-size="10.5">status</text>
+          <text x="248" y="718" fill="#64748b" font-family="'Geist Mono', monospace" font-size="8.5" text-anchor="end">PENDING|APPROV</text>
+
+          <rect x="40" y="726" width="220" height="24" fill="rgba(15, 23, 42, 0.02)"/>
+          <text x="52" y="742" fill="#0f172a" font-size="10.5">verified_by_user_id</text>
+          <text x="248" y="742" fill="#64748b" font-family="'Geist Mono', monospace" font-size="8.5" text-anchor="end">bigint (FK)</text>
+        </g>
+
+        <!-- ========================================== -->
+        <!-- TABLE 11: user_library (Domain 5)          -->
+        <!-- ========================================== -->
+        <g id="table-user-library" filter="url(#box-shadow)">
+          <rect x="290" y="580" width="220" height="150" rx="6" fill="#ffffff" stroke="#059669" stroke-width="1.2"/>
+          <rect x="290" y="580" width="220" height="26" rx="6" fill="rgba(5, 150, 105, 0.08)"/>
+          <rect x="290" y="598" width="220" height="8" fill="rgba(5, 150, 105, 0.08)"/>
+          <line x1="290" y1="606" x2="510" y2="606" stroke="rgba(5, 150, 105, 0.3)" stroke-width="1"/>
+          <text x="302" y="597" fill="#065f46" font-size="11" font-weight="700">user_library (Entitlements)</text>
+
+          <text x="302" y="622" fill="#0f172a" font-size="10.5">id</text>
+          <text x="498" y="622" fill="#64748b" font-family="'Geist Mono', monospace" font-size="8.5" text-anchor="end">bigint (PK)</text>
+
+          <rect x="290" y="630" width="220" height="24" fill="rgba(15, 23, 42, 0.02)"/>
+          <text x="302" y="646" fill="#0f172a" font-size="10.5">user_id</text>
+          <text x="498" y="646" fill="#eb6c36" font-family="'Geist Mono', monospace" font-size="8.5" text-anchor="end">FK (CASCADE)</text>
+
+          <text x="302" y="670" fill="#0f172a" font-size="10.5">book_id</text>
+          <text x="498" y="670" fill="#059669" font-family="'Geist Mono', monospace" font-size="8.5" text-anchor="end">FK (RESTRICT)</text>
+
+          <rect x="290" y="678" width="220" height="24" fill="rgba(15, 23, 42, 0.02)"/>
+          <text x="302" y="694" fill="#0f172a" font-size="10.5">order_id</text>
+          <text x="498" y="694" fill="#059669" font-family="'Geist Mono', monospace" font-size="8.5" text-anchor="end">FK (RESTRICT)</text>
+
+          <text x="302" y="718" fill="#0f172a" font-size="10.5">granted_at</text>
+          <text x="498" y="718" fill="#64748b" font-family="'Geist Mono', monospace" font-size="8.5" text-anchor="end">timestamptz</text>
+        </g>
+
+        <!-- ========================================== -->
+        <!-- TABLE 12: download_tokens                  -->
+        <!-- ========================================== -->
+        <g id="table-download-tokens" filter="url(#box-shadow)">
+          <rect x="540" y="580" width="230" height="170" rx="6" fill="#ffffff" stroke="#334155" stroke-width="1"/>
+          <rect x="540" y="580" width="230" height="26" rx="6" fill="rgba(15, 23, 42, 0.05)"/>
+          <rect x="540" y="598" width="230" height="8" fill="rgba(15, 23, 42, 0.05)"/>
+          <line x1="540" y1="606" x2="770" y2="606" stroke="rgba(15, 23, 42, 0.15)" stroke-width="1"/>
+          <text x="552" y="597" fill="#0f172a" font-size="11" font-weight="700">download_tokens (Quota)</text>
+
+          <text x="552" y="622" fill="#0f172a" font-size="10.5">id</text>
+          <text x="758" y="622" fill="#64748b" font-family="'Geist Mono', monospace" font-size="8.5" text-anchor="end">bigint (PK)</text>
+
+          <rect x="540" y="630" width="230" height="24" fill="rgba(15, 23, 42, 0.02)"/>
+          <text x="552" y="646" fill="#0f172a" font-size="10.5">token</text>
+          <text x="758" y="646" fill="#ca8a04" font-family="'Geist Mono', monospace" font-size="8.5" text-anchor="end">UQ uuid</text>
+
+          <text x="552" y="670" fill="#0f172a" font-size="10.5">user_id / book_id</text>
+          <text x="758" y="670" fill="#eb6c36" font-family="'Geist Mono', monospace" font-size="8.5" text-anchor="end">FK (CASCADE)</text>
+
+          <rect x="540" y="678" width="230" height="24" fill="rgba(15, 23, 42, 0.02)"/>
+          <text x="552" y="694" fill="#0f172a" font-size="10.5">expires_at</text>
+          <text x="758" y="694" fill="#64748b" font-family="'Geist Mono', monospace" font-size="8.5" text-anchor="end">timestamptz (24h)</text>
+
+          <text x="552" y="718" fill="#0f172a" font-size="10.5">max / count</text>
+          <text x="758" y="718" fill="#64748b" font-family="'Geist Mono', monospace" font-size="8.5" text-anchor="end">5 / int</text>
+
+          <rect x="540" y="726" width="230" height="24" fill="rgba(15, 23, 42, 0.02)"/>
+          <text x="552" y="742" fill="#0f172a" font-size="10.5">is_revoked</text>
+          <text x="758" y="742" fill="#64748b" font-family="'Geist Mono', monospace" font-size="8.5" text-anchor="end">boolean</text>
+        </g>
+
+        <!-- ========================================== -->
+        <!-- TABLE 13: download_logs (Audit Trail)      -->
+        <!-- ========================================== -->
+        <g id="table-download-logs" filter="url(#box-shadow)">
+          <rect x="800" y="580" width="220" height="150" rx="6" fill="#ffffff" stroke="#334155" stroke-width="1"/>
+          <rect x="800" y="580" width="220" height="26" rx="6" fill="rgba(15, 23, 42, 0.05)"/>
+          <rect x="800" y="598" width="220" height="8" fill="rgba(15, 23, 42, 0.05)"/>
+          <line x1="800" y1="606" x2="1020" y2="606" stroke="rgba(15, 23, 42, 0.15)" stroke-width="1"/>
+          <text x="812" y="597" fill="#0f172a" font-size="11" font-weight="700">download_logs (Audit)</text>
+
+          <text x="812" y="622" fill="#0f172a" font-size="10.5">id</text>
+          <text x="1008" y="622" fill="#64748b" font-family="'Geist Mono', monospace" font-size="8.5" text-anchor="end">bigint (PK)</text>
+
+          <rect x="800" y="630" width="220" height="24" fill="rgba(15, 23, 42, 0.02)"/>
+          <text x="812" y="646" fill="#0f172a" font-size="10.5">download_token_id</text>
+          <text x="1008" y="646" fill="#2563eb" font-family="'Geist Mono', monospace" font-size="8.5" text-anchor="end">FK (SET NULL)</text>
+
+          <text x="812" y="670" fill="#0f172a" font-size="10.5">user_id / book_id</text>
+          <text x="1008" y="670" fill="#eb6c36" font-family="'Geist Mono', monospace" font-size="8.5" text-anchor="end">FK (CASCADE)</text>
+
+          <rect x="800" y="678" width="220" height="24" fill="rgba(15, 23, 42, 0.02)"/>
+          <text x="812" y="694" fill="#0f172a" font-size="10.5">ip_address</text>
+          <text x="1008" y="694" fill="#64748b" font-family="'Geist Mono', monospace" font-size="8.5" text-anchor="end">varchar(45)</text>
+
+          <text x="812" y="718" fill="#0f172a" font-size="10.5">downloaded_at</text>
+          <text x="1008" y="718" fill="#64748b" font-family="'Geist Mono', monospace" font-size="8.5" text-anchor="end">timestamptz</text>
+        </g>
+      </svg>
+    </div>
+
+    <!-- Legend Bar -->
+    <div class="legend-bar">
+      <span style="font-weight:700; color:var(--color-ink);">สัญลักษณ์ &amp; กฎการควบคุม (Legend &amp; Rules):</span>
+      <div class="legend-item">
+        <span class="legend-chip pk">PK</span>
+        <span>Primary Key (BIGINT Identity)</span>
+      </div>
+      <div class="legend-item">
+        <span class="legend-chip fk">FK</span>
+        <span>Foreign Key Connector</span>
+      </div>
+      <div class="legend-item">
+        <span class="legend-chip uq">UQ</span>
+        <span>Unique Constraint</span>
+      </div>
+      <div class="legend-item">
+        <span class="legend-chip cascade">CASCADE</span>
+        <span style="color:var(--color-accent-coral); font-weight:600;">ลบระลอก (ON DELETE CASCADE)</span>
+      </div>
+      <div class="legend-item">
+        <span style="display:inline-block; width:12px; height:2px; background:#059669;"></span>
+        <span style="color:var(--color-emerald-primary); font-weight:600;">ห้ามลบหากมีการอ้างอิง (RESTRICT)</span>
+      </div>
+      <div class="legend-item">
+        <span style="display:inline-block; width:12px; height:2px; background:#2563eb;"></span>
+        <span style="color:var(--color-indigo-link); font-weight:600;">ปรับเป็นค่าว่าง (SET NULL)</span>
+      </div>
+    </div>
+
+    <!-- Exhaustive Data Dictionary (All 16 Tables) -->
+    <section class="dictionary-section">
+      <h2 class="section-heading">พจนานุกรมข้อมูลและความสัมพันธ์ทั้ง 16 ตาราง (Data Dictionary)</h2>
+      <p class="section-caption">เจาะลึกบทบาททางธุรกิจ ความเป็นปกติระดับ 3NF/BCNF และพฤติกรรมความปลอดภัยของแต่ละตารางในระบบ</p>
+
+      <div class="dictionary-grid">
+        <!-- 1. books -->
+        <div class="dict-card">
+          <h3><span>1. books</span> <span class="tag">Catalog Anchor</span></h3>
+          <p>ตารางหลักเก็บรายการ e-Book ทุกเล่มในร้าน ควบคุมสถานะการวางจำหน่าย และเชื่อมโยงไฟล์ดิจิทัลที่ปลอดภัย</p>
+          <table class="dict-table">
+            <tr><th>คอลัมน์สำคัญ</th><th>ชนิดข้อมูล</th><th>ข้อจำกัด / หมายเหตุ</th></tr>
+            <tr><td class="col-name">id</td><td class="col-type">BIGINT</td><td class="col-rule">PK (GENERATED ALWAYS)</td></tr>
+            <tr><td class="col-name">title</td><td class="col-type">VARCHAR(255)</td><td class="col-rule">NOT NULL ชื่อหนังสือ</td></tr>
+            <tr><td class="col-name">publisher_id</td><td class="col-type">BIGINT</td><td class="col-rule">FK -&gt; publishers (SET NULL)</td></tr>
+            <tr><td class="col-name">price</td><td class="col-type">NUMERIC(10,2)</td><td class="col-rule">CHECK (price &gt;= 0)</td></tr>
+            <tr><td class="col-name">file_url</td><td class="col-type">TEXT</td><td class="col-rule">ที่จัดเก็บไฟล์ e-Book ตัวเต็ม</td></tr>
+          </table>
+        </div>
+
+        <!-- 2. users -->
+        <div class="dict-card">
+          <h3><span>2. users</span> <span class="tag">Security / Auth</span></h3>
+          <p>เก็บข้อมูลผู้ใช้งานทั้งลูกค้าและผู้ดูแลระบบ รหัสผ่านเข้ารหัสด้วย scrypt cryptographic hashing</p>
+          <table class="dict-table">
+            <tr><th>คอลัมน์สำคัญ</th><th>ชนิดข้อมูล</th><th>ข้อจำกัด / หมายเหตุ</th></tr>
+            <tr><td class="col-name">id</td><td class="col-type">BIGINT</td><td class="col-rule">PK (GENERATED ALWAYS)</td></tr>
+            <tr><td class="col-name">email</td><td class="col-type">VARCHAR(255)</td><td class="col-rule">NOT NULL UNIQUE</td></tr>
+            <tr><td class="col-name">password_hash</td><td class="col-type">VARCHAR(255)</td><td class="col-rule">crypto.scrypt Salted Hash</td></tr>
+            <tr><td class="col-name">role</td><td class="col-type">VARCHAR(20)</td><td class="col-rule">CHECK ('customer', 'admin')</td></tr>
+          </table>
+        </div>
+
+        <!-- 3. orders -->
+        <div class="dict-card">
+          <h3><span>3. orders</span> <span class="tag">Hybrid Identity</span></h3>
+          <p>แกนกลางของการสั่งซื้อ ใช้ Hybrid ID: id สำหรับการ JOIN ภายใน และ order_number (UUID) สำหรับสาธารณะ</p>
+          <table class="dict-table">
+            <tr><th>คอลัมน์สำคัญ</th><th>ชนิดข้อมูล</th><th>ข้อจำกัด / หมายเหตุ</th></tr>
+            <tr><td class="col-name">id</td><td class="col-type">BIGINT</td><td class="col-rule">PK ใช้ในระบบเชื่อมโยงภายใน</td></tr>
+            <tr><td class="col-name">order_number</td><td class="col-type">VARCHAR(64)</td><td class="col-rule">UUID v4 ป้องกันการสุ่ม URL</td></tr>
+            <tr><td class="col-name">user_id</td><td class="col-type">BIGINT</td><td class="col-rule">FK -&gt; users (ON DELETE RESTRICT)</td></tr>
+            <tr><td class="col-name">order_status</td><td class="col-type">VARCHAR(30)</td><td class="col-rule">PENDING, PAYMENT_SUBMITTED, PAID</td></tr>
+          </table>
+        </div>
+
+        <!-- 4. order_items -->
+        <div class="dict-card">
+          <h3><span>4. order_items</span> <span class="tag">Price Snapshotting</span></h3>
+          <p>บันทึกราคาหนังสือ ณ วินาทีที่สั่งซื้อ (Frozen Unit Price) เพื่อไม่ให้กระทบยอดขายเมื่อราคาหนังสือในแคตตาล็อกเปลี่ยนแปลง</p>
+          <table class="dict-table">
+            <tr><th>คอลัมน์สำคัญ</th><th>ชนิดข้อมูล</th><th>ข้อจำกัด / หมายเหตุ</th></tr>
+            <tr><td class="col-name">id</td><td class="col-type">BIGINT</td><td class="col-rule">PK (GENERATED ALWAYS)</td></tr>
+            <tr><td class="col-name">order_id</td><td class="col-type">BIGINT</td><td class="col-rule">FK -&gt; orders (CASCADE)</td></tr>
+            <tr><td class="col-name">book_id</td><td class="col-type">BIGINT</td><td class="col-rule">FK -&gt; books (RESTRICT)</td></tr>
+            <tr><td class="col-name">unit_price</td><td class="col-type">NUMERIC(10,2)</td><td class="col-rule">CHECK (unit_price &gt;= 0)</td></tr>
+          </table>
+        </div>
+
+        <!-- 5. payments -->
+        <div class="dict-card">
+          <h3><span>5. payments</span> <span class="tag">Verification Queue</span></h3>
+          <p>จัดเก็บสลิปโอนเงิน PromptPay ในรูปแบบ Base64 Data URL ป้องกันปัญหา Third-party Storage Downtime</p>
+          <table class="dict-table">
+            <tr><th>คอลัมน์สำคัญ</th><th>ชนิดข้อมูล</th><th>ข้อจำกัด / หมายเหตุ</th></tr>
+            <tr><td class="col-name">id</td><td class="col-type">BIGINT</td><td class="col-rule">PK (GENERATED ALWAYS)</td></tr>
+            <tr><td class="col-name">order_id</td><td class="col-type">BIGINT</td><td class="col-rule">FK -&gt; orders (CASCADE)</td></tr>
+            <tr><td class="col-name">slip_image_url</td><td class="col-type">TEXT</td><td class="col-rule">Base64 Data URL (ไม่เกิน 2MB)</td></tr>
+            <tr><td class="col-name">status</td><td class="col-type">VARCHAR(30)</td><td class="col-rule">PENDING_REVIEW, APPROVED, REJECTED</td></tr>
+          </table>
+        </div>
+
+        <!-- 6. user_library -->
+        <div class="dict-card">
+          <h3><span>6. user_library</span> <span class="tag">Entitlement Core</span></h3>
+          <p>สิทธิ์การเข้าถึง e-Book ถาวรของลูกค้า มี UNIQUE (user_id, book_id) ป้องกันการซื้อซ้ำในคลังเดียวกัน</p>
+          <table class="dict-table">
+            <tr><th>คอลัมน์สำคัญ</th><th>ชนิดข้อมูล</th><th>ข้อจำกัด / หมายเหตุ</th></tr>
+            <tr><td class="col-name">id</td><td class="col-type">BIGINT</td><td class="col-rule">PK (GENERATED ALWAYS)</td></tr>
+            <tr><td class="col-name">user_id</td><td class="col-type">BIGINT</td><td class="col-rule">FK -&gt; users (CASCADE)</td></tr>
+            <tr><td class="col-name">book_id</td><td class="col-type">BIGINT</td><td class="col-rule">FK -&gt; books (RESTRICT)</td></tr>
+            <tr><td class="col-name">order_id</td><td class="col-type">BIGINT</td><td class="col-rule">FK -&gt; orders (RESTRICT)</td></tr>
+          </table>
+        </div>
+
+        <!-- 7. download_tokens -->
+        <div class="dict-card">
+          <h3><span>7. download_tokens</span> <span class="tag">Security Quota</span></h3>
+          <p>โทเค็นชั่วคราวแบบมีวันหมดอายุ (TTL 24 ชั่วโมง) และจำกัดการดาวน์โหลดไม่เกิน 5 ครั้งต่อโทเค็น</p>
+          <table class="dict-table">
+            <tr><th>คอลัมน์สำคัญ</th><th>ชนิดข้อมูล</th><th>ข้อจำกัด / หมายเหตุ</th></tr>
+            <tr><td class="col-name">token</td><td class="col-type">VARCHAR(64)</td><td class="col-rule">UUID v4 ป้องกันการดักฟังหรือเดา URL</td></tr>
+            <tr><td class="col-name">expires_at</td><td class="col-type">TIMESTAMPTZ</td><td class="col-rule">กำหนดอายุการใช้งาน (24 ชม.)</td></tr>
+            <tr><td class="col-name">max_downloads</td><td class="col-type">INT</td><td class="col-rule">โควตาสูงสุดเริ่มต้น 5 ครั้ง</td></tr>
+            <tr><td class="col-name">download_count</td><td class="col-type">INT</td><td class="col-rule">จำนวนครั้งที่ถูกดาวน์โหลดจริง</td></tr>
+          </table>
+        </div>
+
+        <!-- 8. download_logs -->
+        <div class="dict-card">
+          <h3><span>8. download_logs</span> <span class="tag">Audit Telemetry</span></h3>
+          <p>บันทึกประวัติการดาวน์โหลดอย่างละเอียด รวมถึง IP Address และ User Agent เพื่อการตรวจสอบความปลอดภัยย้อนหลัง</p>
+          <table class="dict-table">
+            <tr><th>คอลัมน์สำคัญ</th><th>ชนิดข้อมูล</th><th>ข้อจำกัด / หมายเหตุ</th></tr>
+            <tr><td class="col-name">id</td><td class="col-type">BIGINT</td><td class="col-rule">PK (GENERATED ALWAYS)</td></tr>
+            <tr><td class="col-name">download_token_id</td><td class="col-type">BIGINT</td><td class="col-rule">FK -&gt; download_tokens (SET NULL)</td></tr>
+            <tr><td class="col-name">ip_address</td><td class="col-type">VARCHAR(45)</td><td class="col-rule">รองรับทั้ง IPv4 และ IPv6</td></tr>
+            <tr><td class="col-name">downloaded_at</td><td class="col-type">TIMESTAMPTZ</td><td class="col-rule">บันทึกเวลาที่ส่งไฟล์สำเร็จ</td></tr>
+          </table>
+        </div>
+
+        <!-- 9. carts & cart_items -->
+        <div class="dict-card">
+          <h3><span>9. carts &amp; cart_items</span> <span class="tag">Ephemeral State</span></h3>
+          <p>ตะกร้าสินค้าก่อนการชำระเงิน ผู้ใช้ 1 คนมีได้ 1 ตะกร้า และตัดสิทธิ์ทันทีที่กด Checkout สร้างเป็น Order</p>
+          <table class="dict-table">
+            <tr><th>คอลัมน์สำคัญ</th><th>ชนิดข้อมูล</th><th>ข้อจำกัด / หมายเหตุ</th></tr>
+            <tr><td class="col-name">user_id</td><td class="col-type">BIGINT</td><td class="col-rule">UNIQUE FK -&gt; users (CASCADE)</td></tr>
+            <tr><td class="col-name">cart_id</td><td class="col-type">BIGINT</td><td class="col-rule">FK -&gt; carts (CASCADE)</td></tr>
+            <tr><td class="col-name">book_id</td><td class="col-type">BIGINT</td><td class="col-rule">FK -&gt; books (CASCADE)</td></tr>
+            <tr><td class="col-name">uq_cart_book</td><td class="col-type">CONSTRAINT</td><td class="col-rule">UNIQUE (cart_id, book_id) ห้ามซ้ำ</td></tr>
+          </table>
+        </div>
+
+        <!-- 10. coupons -->
+        <div class="dict-card">
+          <h3><span>10. coupons</span> <span class="tag">Promotion Engine</span></h3>
+          <p>ระบบคูปองส่วนลด รองรับทั้งแบบลดเป็นจำนวนเงินคงที่ (FIXED) และคิดเป็นร้อยละ (PERCENTAGE)</p>
+          <table class="dict-table">
+            <tr><th>คอลัมน์สำคัญ</th><th>ชนิดข้อมูล</th><th>ข้อจำกัด / หมายเหตุ</th></tr>
+            <tr><td class="col-name">code</td><td class="col-type">VARCHAR(50)</td><td class="col-rule">UNIQUE รหัสคูปอง (e.g. WELCOME50)</td></tr>
+            <tr><td class="col-name">discount_type</td><td class="col-type">VARCHAR(20)</td><td class="col-rule">CHECK IN ('FIXED', 'PERCENTAGE')</td></tr>
+            <tr><td class="col-name">min_spend</td><td class="col-type">NUMERIC(10,2)</td><td class="col-rule">ยอดซื้อขั้นต่ำเพื่อใช้ส่วนลด</td></tr>
+            <tr><td class="col-name">times_used</td><td class="col-type">INT</td><td class="col-rule">นับจำนวนครั้งที่ถูกนำไปใช้</td></tr>
+          </table>
+        </div>
+
+        <!-- 11. publishers & authors -->
+        <div class="dict-card">
+          <h3><span>11. publishers &amp; authors</span> <span class="tag">Catalog Masters</span></h3>
+          <p>ตารางหลักสำนักพิมพ์และผู้แต่ง ป้องกันการซ้ำซ้อนของข้อมูลข้อความตามหลักการ Third Normal Form (3NF)</p>
+          <table class="dict-table">
+            <tr><th>คอลัมน์สำคัญ</th><th>ชนิดข้อมูล</th><th>ข้อจำกัด / หมายเหตุ</th></tr>
+            <tr><td class="col-name">publishers.name</td><td class="col-type">VARCHAR(150)</td><td class="col-rule">UNIQUE ชื่อสำนักพิมพ์</td></tr>
+            <tr><td class="col-name">authors.name</td><td class="col-type">VARCHAR(150)</td><td class="col-rule">NOT NULL ชื่อนักเขียน</td></tr>
+            <tr><td class="col-name">authors.bio</td><td class="col-type">TEXT</td><td class="col-rule">ประวัติและผลงานสังเขป</td></tr>
+          </table>
+        </div>
+
+        <!-- 12. Junction Tables -->
+        <div class="dict-card">
+          <h3><span>12. book_categories &amp; authors</span> <span class="tag">Junction Tables</span></h3>
+          <p>ตารางร่วม Many-to-Many แก้ไขปัญหาหนังสือ 1 เล่มมีหลายหมวดหมู่ และมีนักเขียนร่วมหลายคน</p>
+          <table class="dict-table">
+            <tr><th>คอลัมน์สำคัญ</th><th>ชนิดข้อมูล</th><th>ข้อจำกัด / หมายเหตุ</th></tr>
+            <tr><td class="col-name">book_id + category_id</td><td class="col-type">BIGINT</td><td class="col-rule">Composite PK (ON DELETE CASCADE)</td></tr>
+            <tr><td class="col-name">book_id + author_id</td><td class="col-type">BIGINT</td><td class="col-rule">Composite PK (ON DELETE CASCADE)</td></tr>
+            <tr><td class="col-name">author_role</td><td class="col-type">VARCHAR(50)</td><td class="col-rule">บทบาท เช่น main_author, illustrator</td></tr>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div>
+        <span>Neon E-Book Store · Architectural Engineering Documentation</span>
+      </div>
+      <div>
+        <span>Design System: Editorial Emerald &amp; Slate · Schema Normalized 3NF/BCNF</span>
+      </div>
+    </footer>
+  </div>
+</body>
+</html>
