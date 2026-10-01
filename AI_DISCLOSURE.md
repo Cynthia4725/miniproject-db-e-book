@@ -413,3 +413,15 @@
   - จัดทำเอกสารสถาปัตยกรรม [docs/adr/0008-base64-slip-upload-cart-badge-and-auth-portal.md](file:///c:/Users/bond/Documents/miniproject-db-e-book/docs/adr/0008-base64-slip-upload-cart-badge-and-auth-portal.md), อัปเดตพจนานุกรมศัพท์ [GLOSSARY.md](file:///c:/Users/bond/Documents/miniproject-db-e-book/GLOSSARY.md), และจัดทำข้อกำหนดทางเทคนิค [docs/specs/0008-base64-slip-upload-cart-badge-and-auth-portal.md](file:///c:/Users/bond/Documents/miniproject-db-e-book/docs/specs/0008-base64-slip-upload-cart-badge-and-auth-portal.md)
 - **การตัดสินใจของมนุษย์ (Human Decision)**:
   - ยืนยันแนวทางการออกแบบตามข้อเสนอแนะของ AI ครบทุกข้อ
+
+### รอบที่ 33: Tracer-Bullet Ticket Breakdown for Spec-0008 (/to-tickets)
+- **วันที่**: 2026-10-02
+- **โจทย์ที่ป้อนให้ AI**: ย่อยเอกสารข้อกำหนด Spec-0008 (Base64 Slip Image Storage, Reactive Cart Badge, and Self-Contained Auth Portal) ออกเป็นชุดงานย่อยแบบ Tracer-Bullet Tickets
+- **สิ่งที่ AI นำเสนอ**:
+  - เสนอการแบ่งงานเป็น 3 Vertical Slices ที่เป็นอิสระต่อกัน:
+    1. Ticket 01: Reactive Cart Item Badge in Navigation Header Slice (เริ่มได้ทันที)
+    2. Ticket 02: Interactive Base64 Slip File Upload & Admin Verification Preview Slice (เริ่มได้ทันที)
+    3. Ticket 03: Customer Registration, Cryptographic Password Hashing & Login Portal Slice (เริ่มได้ทันที)
+  - จัดทำไฟล์ Ticket ทั้ง 3 ฉบับพร้อมเกณฑ์การยอมรับ (Acceptance Criteria) ลงในไดเรกทอรี `.scratch/0008-base64-slip-upload-cart-badge-and-auth-portal/issues/`
+- **การตัดสินใจของมนุษย์ (Human Decision)**:
+  - ตรวจสอบและให้ความเห็นชอบกับการแบ่ง Tickets ทั้ง 3 ใบ
