@@ -18,12 +18,6 @@ export default async function OrderPaymentPage({
     notFound();
   }
 
-  async function handleSubmitSlip(formData: FormData) {
-    'use server';
-    const slipUrl = formData.get('slip_url')?.toString() || 'https://placehold.co/400x600/png?text=PromptPay+Slip';
-    await submitSlipAction(order_number, slipUrl);
-  }
-
   return (
     <div className="max-w-xl mx-auto space-y-6">
       <div className="text-center">
@@ -69,7 +63,7 @@ export default async function OrderPaymentPage({
         </div>
 
         {/* Slip Submission Form */}
-        <form action={handleSubmitSlip} className="border-t border-slate-100 pt-4 space-y-4">
+        <form action={submitSlipAction.bind(null, order_number)} className="border-t border-slate-100 pt-4 space-y-4">
           <div>
             <label htmlFor="slip_url" className="block text-xs font-semibold text-slate-700 mb-1">
               แนบ URL รูปภาพสลิปโอนเงิน (Transfer Slip URL)

@@ -28,12 +28,6 @@ export default async function BookDetailPage({
   const hasDiscount = book.discountPrice != null && book.discountPrice < book.price;
   const effectivePrice = hasDiscount ? book.discountPrice! : book.price;
 
-  async function handleAddToCart() {
-    'use server';
-    if (!book) return;
-    await addToCartAction(book.id);
-  }
-
   return (
     <div className="max-w-5xl mx-auto space-y-6">
       <Link href="/" className="inline-flex items-center text-xs font-medium text-slate-500 hover:text-emerald-600 transition-colors">
@@ -134,7 +128,7 @@ export default async function BookDetailPage({
               </div>
             </div>
 
-            <form action={handleAddToCart}>
+            <form action={addToCartAction.bind(null, book.id)}>
               <button
                 type="submit"
                 className="w-full sm:w-auto px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm rounded-xl shadow transition-colors flex items-center justify-center gap-2"

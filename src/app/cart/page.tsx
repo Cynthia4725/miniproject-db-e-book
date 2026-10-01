@@ -1,25 +1,15 @@
 import Link from 'next/link';
 import { CartRepository } from '@/modules/cart/cart.repository';
-import { getCurrentUser, DEMO_USERS, setSessionCookie } from '@/lib/session';
+import { getCurrentUser, DEMO_USERS } from '@/lib/session';
 import { removeFromCartAction, checkoutAction } from '@/app/actions/cart.actions';
 
 export const dynamic = 'force-dynamic';
 
 export default async function CartPage() {
-  let user = await getCurrentUser();
-  if (!user) {
-    user = DEMO_USERS.customer;
-    await setSessionCookie(user);
-  }
+  const user = (await getCurrentUser()) || DEMO_USERS.customer;
 
   const cartRepo = new CartRepository();
   const cart = await cartRepo.getCartWithItems(user.userId);
-
-  async function handleCheckout(formData: FormData) {
-    'use server';
-    const coupon = formData.get('coupon')?.toString();
-    await checkoutAction(coupon);
-  }
 
   return (
     <div className="max-w-4xl mx-auto space-y-8">
@@ -68,10 +58,7 @@ export default async function CartPage() {
                       ฿{item.effectivePrice.toLocaleString()}
                     </span>
 
-                    <form action={async () => {
-                      'use server';
-                      await removeFromCartAction(item.bookId);
-                    }}>
+                    <form action={removeFromCartAction.bind(null, item.bookId)}>
                       <button
                         type="submit"
                         className="text-xs text-red-500 hover:text-red-700 p-1 font-medium transition-colors"
@@ -92,7 +79,7 @@ export default async function CartPage() {
               สรุปคำสั่งซื้อ (Order Summary)
             </h3>
 
-            <form action={handleCheckout} className="space-y-4">
+            <form action={checkoutAction} className="space-y-4">
               {/* Coupon input */}
               <div>
                 <label htmlFor="coupon" className="block text-xs font-semibold text-slate-600 mb-1">

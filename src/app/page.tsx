@@ -201,10 +201,7 @@ export default async function CatalogPage({
                     </span>
                   </div>
 
-                  <form action={async () => {
-                    'use server';
-                    await addToCartAction(book.id);
-                  }}>
+                  <form action={addToCartAction.bind(null, book.id)}>
                     <button
                       type="submit"
                       className="px-3 py-1.5 bg-slate-900 hover:bg-emerald-600 text-white rounded-lg text-xs font-medium transition-colors"

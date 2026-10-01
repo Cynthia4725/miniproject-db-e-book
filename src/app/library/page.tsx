@@ -1,16 +1,12 @@
 import Link from 'next/link';
 import { LibraryRepository } from '@/modules/fulfillment/library.repository';
-import { getCurrentUser, DEMO_USERS, setSessionCookie } from '@/lib/session';
+import { getCurrentUser, DEMO_USERS } from '@/lib/session';
 import { getDatabaseExecutor } from '@/db/client';
 
 export const dynamic = 'force-dynamic';
 
 export default async function LibraryPage() {
-  let user = await getCurrentUser();
-  if (!user) {
-    user = DEMO_USERS.customer;
-    await setSessionCookie(user);
-  }
+  const user = (await getCurrentUser()) || DEMO_USERS.customer;
 
   const libraryRepo = new LibraryRepository();
   const libraryItems = await libraryRepo.getUserLibrary(user.userId);

@@ -33,7 +33,14 @@ export async function removeFromCartAction(bookId: number | string): Promise<voi
   revalidatePath('/cart');
 }
 
-export async function checkoutAction(couponCode?: string): Promise<void> {
+export async function checkoutAction(couponOrFormData?: string | FormData): Promise<void> {
+  let couponCode: string | undefined;
+  if (typeof couponOrFormData === 'string') {
+    couponCode = couponOrFormData;
+  } else if (couponOrFormData && typeof couponOrFormData === 'object' && 'get' in couponOrFormData) {
+    couponCode = (couponOrFormData as FormData).get('coupon')?.toString();
+  }
+
   const user = await getOrInitUser();
   const cartRepo = new CartRepository();
   
@@ -46,7 +53,15 @@ export async function checkoutAction(couponCode?: string): Promise<void> {
   redirect(`/orders/${result.orderNumber}/pay`);
 }
 
-export async function submitSlipAction(orderNumber: string, slipImageUrl: string): Promise<void> {
+export async function submitSlipAction(orderNumber: string, slipUrlOrFormData?: string | FormData): Promise<void> {
+  let slipImageUrl = 'https://placehold.co/400x600/png?text=PromptPay+Slip';
+  if (typeof slipUrlOrFormData === 'string' && slipUrlOrFormData) {
+    slipImageUrl = slipUrlOrFormData;
+  } else if (slipUrlOrFormData && typeof slipUrlOrFormData === 'object' && 'get' in slipUrlOrFormData) {
+    const val = (slipUrlOrFormData as FormData).get('slip_url')?.toString();
+    if (val) slipImageUrl = val;
+  }
+
   const user = await getOrInitUser();
   const orderRepo = new OrderRepository();
   const order = await orderRepo.findByOrderNumber(orderNumber);
@@ -58,7 +73,7 @@ export async function submitSlipAction(orderNumber: string, slipImageUrl: string
   await paymentRepo.submitPaymentSlip({
     orderId: order.id,
     amountPaid: order.netAmount,
-    slipImageUrl: slipImageUrl || 'https://placehold.co/400x600/png?text=PromptPay+Slip',
+    slipImageUrl,
     transferredAt: new Date().toISOString(),
   });
 

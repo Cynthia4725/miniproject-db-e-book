@@ -128,10 +128,7 @@ export default async function AdminBooksPage() {
                     </span>
                   </td>
                   <td className="py-3 px-4 text-right">
-                    <form action={async () => {
-                      'use server';
-                      await toggleBookStatusAction(b.id, !b.is_active);
-                    }} className="inline-block">
+                    <form action={toggleBookStatusAction.bind(null, b.id, !b.is_active)} className="inline-block">
                       <button
                         type="submit"
                         className="px-2.5 py-1 text-[11px] font-medium rounded border border-slate-200 hover:bg-slate-100 transition-colors"
