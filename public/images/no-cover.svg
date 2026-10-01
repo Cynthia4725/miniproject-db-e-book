@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="600" viewBox="0 0 400 600" fill="none">
+  <!-- Outer Book Canvas -->
+  <rect width="400" height="600" rx="16" fill="#0f172a"/>
+  
+  <!-- Subtle Spine Effect -->
+  <rect x="0" y="0" width="28" height="600" fill="#1e293b"/>
+  <line x1="28" y1="0" x2="28" y2="600" stroke="#334155" stroke-width="1.5"/>
+
+  <!-- Inner Frame -->
+  <rect x="52" y="32" width="316" height="536" rx="12" fill="#1e293b" stroke="#334155" stroke-width="1.5"/>
+
+  <!-- Geometric Grid Texture (Subtle) -->
+  <line x1="52" y1="120" x2="368" y2="120" stroke="#334155" stroke-dasharray="4 4" opacity="0.5"/>
+  <line x1="52" y1="460" x2="368" y2="460" stroke="#334155" stroke-dasharray="4 4" opacity="0.5"/>
+
+  <!-- Book Icon Badge -->
+  <rect x="170" y="210" width="80" height="80" rx="20" fill="#0f172a" stroke="#475569" stroke-width="1.5"/>
+  <text x="210" y="260" font-size="36" text-anchor="middle" dominant-baseline="middle">📖</text>
+
+  <!-- Title & Typography -->
+  <text x="210" y="330" font-family="system-ui, -apple-system, sans-serif" font-size="20" font-weight="800" fill="#f8fafc" text-anchor="middle" letter-spacing="1">
+    NO COVER
+  </text>
+  <text x="210" y="360" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="500" fill="#94a3b8" text-anchor="middle">
+    ยังไม่มีภาพหน้าปก
+  </text>
+  
+  <!-- Footer Tag -->
+  <rect x="135" y="490" width="150" height="26" rx="6" fill="#0f172a" stroke="#334155" stroke-width="1"/>
+  <text x="210" y="507" font-family="monospace" font-size="10" font-weight="600" fill="#10b981" text-anchor="middle" letter-spacing="1">
+    DIGITAL E-BOOK
+  </text>
+</svg>

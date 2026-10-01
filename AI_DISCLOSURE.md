@@ -467,4 +467,22 @@
 - **การตัดสินใจของมนุษย์ (Human Decision)**:
   - ให้ความเห็นชอบกับแนวทางการออกแบบทั้งหมด และสั่งการให้เริ่มดำเนินการจนเสร็จสมบูรณ์
 
+### รอบที่ 36: Resolving Books cover_image_url NOT NULL Constraint & Multi-Mode Cover Selector
+- **วันที่**: 2026-10-02
+- **โจทย์ที่ป้อนให้ AI**: แก้ไข Runtime AppError `null value in column "cover_image_url" of relation "books" violates not-null constraint` และปรับปรุงให้สามารถเลือกอัปโหลดรูปภาพ ระบุ URL รูปภาพ หรือเลือกใช้รูปภาพ No-Cover อัตโนมัติ
+- **สิ่งที่ AI สร้างและดำเนินการ**:
+  - วิเคราะห์โครงสร้างตาราง `books` พบว่าคอลัมน์ `cover_image_url` ถูกกำหนดเป็น `NOT NULL` แต่ในฟังก์ชัน `createBookAction` เดิมไม่ได้ระบุค่าลงไป
+  - ออกแบบและสร้างภาพปกมาตรฐานแบบเวกเตอร์ [public/images/no-cover.svg](file:///c:/Users/bond/Documents/miniproject-db-e-book/public/images/no-cover.svg) เพื่อเป็นภาพเริ่มต้นที่มีความคมชัด ไม่มีภาระการเชื่อมต่อเครือข่ายภายนอก
+  - สร้างคอมโพเนนต์ [src/components/AdminAddBookForm.tsx](file:///c:/Users/bond/Documents/miniproject-db-e-book/src/components/AdminAddBookForm.tsx) รองรับการเลือกโหมดรูปปก 3 รูปแบบ:
+    1. 🚫 **No-Cover**: ใช้ภาพมาตรฐาน `/images/no-cover.svg` อัตโนมัติ
+    2. 🔗 **URL**: ระบุ URL ของรูปภาพ
+    3. 📁 **Upload**: อัปโหลดไฟล์รูปภาพจากเครื่อง (PNG/JPEG/WebP สูงสุด 2MB) และแปลงเป็น Base64 Data URL โดยอัตโนมัติ
+    พร้อมแสดง Live Preview รูปปกหนังสือทันทีก่อนกดยืนยันบันทึก
+  - ปรับปรุง [src/app/actions/admin.actions.ts](file:///c:/Users/bond/Documents/miniproject-db-e-book/src/app/actions/admin.actions.ts) ฟังก์ชัน `createBookAction` ให้รองรับ `cover_image_url` พร้อม Fallback ป้องกัน `null`
+  - ปรับปรุงตารางรายการหนังสือใน [src/app/admin/books/page.tsx](file:///c:/Users/bond/Documents/miniproject-db-e-book/src/app/admin/books/page.tsx) ให้แสดงรูปปก Thumbnail เล็กๆ ข้างชื่อหนังสือ
+  - เขียนชุดทดสอบ [src/app/actions/admin.actions.test.ts](file:///c:/Users/bond/Documents/miniproject-db-e-book/src/app/actions/admin.actions.test.ts) ผ่านครบทั้ง 124/124 การทดสอบ และ `next build` ผ่าน 100%
+- **การตัดสินใจของมนุษย์ (Human Decision)**:
+  - แจ้งปัญหา Error และกำหนดความต้องการให้มีตัวเลือกรูปภาพหน้าปกแบบยืดหยุ่น (Upload / URL / No-Cover)
+
+
 

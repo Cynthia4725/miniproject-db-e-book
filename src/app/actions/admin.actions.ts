@@ -61,6 +61,8 @@ export async function toggleBookStatusAction(
   revalidatePath('/');
 }
 
+const DEFAULT_NO_COVER_URL = '/images/no-cover.svg';
+
 export async function createBookAction(formData: FormData): Promise<void> {
   const user = await getCurrentUser();
   await requireRole(user, ['admin']);
@@ -72,15 +74,21 @@ export async function createBookAction(formData: FormData): Promise<void> {
     ? Number(formData.get('discount_price'))
     : null;
 
+  // Cover image: either uploaded base64 data url, or direct url, or fallback default
+  const coverImageUrlRaw = formData.get('cover_image_url')?.toString().trim();
+  const coverImageUrl = coverImageUrlRaw && coverImageUrlRaw.length > 0
+    ? coverImageUrlRaw
+    : DEFAULT_NO_COVER_URL;
+
   if (!title || !isbn || isNaN(price)) {
     throw new Error('Title, ISBN, and valid price are required');
   }
 
   const db = getDatabaseExecutor();
   await db.query(
-    `INSERT INTO books (title, isbn, price, discount_price, publisher_id) 
-     VALUES ($1, $2, $3, $4, 1) RETURNING id;`,
-    [title, isbn, price, discountPrice]
+    `INSERT INTO books (title, isbn, price, discount_price, cover_image_url, publisher_id) 
+     VALUES ($1, $2, $3, $4, $5, 1) RETURNING id;`,
+    [title, isbn, price, discountPrice, coverImageUrl]
   );
 
   revalidatePath('/admin/books');
