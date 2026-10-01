@@ -208,3 +208,32 @@
 - **การตัดสินใจของมนุษย์ (Human Decision)**:
   - สั่งเริ่มการอิมพลีเมนต์ตามสเปกและยอมรับผลการตรวจสอบการทำงานทั้งหมด
 
+### รอบที่ 17: Tracer-Bullet Ticket Breakdown for Spec-0003 (/to-tickets)
+- **วันที่**: 2026-10-02
+- **โจทย์ที่ป้อนให้ AI**: ย่อยเอกสารข้อกำหนด Spec-0003 (Neon Serverless PostgreSQL with Direct SQL Queries) ออกเป็นชุดงานย่อยแบบ Tracer-Bullet Tickets
+- **สิ่งที่ AI นำเสนอ**:
+  - เสนอการซอยงานเป็น 3 Vertical Slices:
+    1. Ticket 01: Parameterized Direct SQL Client & PostgreSQL Error Mapping Slice (เริ่มได้ทันที)
+    2. Ticket 02: Atomic Multi-Query Transaction Execution & Rollback Slice (บล็อกโดย Ticket 01)
+    3. Ticket 03: Native SQL Business Intelligence & Advanced Analytics Suite Slice (บล็อกโดย Ticket 01)
+  - สร้างไฟล์ Ticket ทั้ง 3 ฉบับพร้อม Acceptance Criteria ครบถ้วนใน `.scratch/0003-neon-serverless-postgresql/issues/`
+- **การตัดสินใจของมนุษย์ (Human Decision)**:
+  - ตรวจสอบและยืนยันการแบ่ง Tickets และลำดับ Blocking Edges ทั้งหมด
+
+### รอบที่ 18: Implementation & Test-Driven Development for Spec-0003 (/implement, /tdd)
+- **วันที่**: 2026-10-02
+- **โจทย์ที่ป้อนให้ AI**: ลงมือพัฒนาโค้ดตาม Tickets ของ Spec-0003 (Neon Serverless PostgreSQL with Direct SQL Queries) ทั้ง 3 Tickets โดยยึดหลัก TDD (Red-Green-Refactor)
+- **สิ่งที่ AI นำเสนอ**:
+  - พัฒนาโมดูล [src/db/client.ts](file:///c:/Users/bond/Documents/miniproject-db-e-book/src/db/client.ts) (Ticket 01):
+    - รองรับ Parameterized Queries และ Tagged Template `sql` syntax ป้องกัน SQL Injection อย่างเด็ดขาด
+    - พัฒนาระบบ `mapDatabaseError` แปลง Error Code ของ PostgreSQL (`23505`, `23503`, `23514`) เป็น Typed Domain Errors (`ConflictError`, `NotFoundError`, `ValidationError`)
+    - เพิ่ม `sanitizeDatabaseErrorMessage` ป้องกันการรั่วไหลของ Connection String และรหัสผ่านฐานข้อมูล
+  - พัฒนาโมดูล [src/db/transaction.ts](file:///c:/Users/bond/Documents/miniproject-db-e-book/src/db/transaction.ts) (Ticket 02):
+    - สร้างยูทิลิตี้ `runTransaction` จัดการ ACID Atomicity พร้อมระบบ Rollback ปลอดภัยเมื่อเกิดข้อผิดพลาด
+  - พัฒนาโมดูล [src/modules/analytics/analytics.repository.ts](file:///c:/Users/bond/Documents/miniproject-db-e-book/src/modules/analytics/analytics.repository.ts) (Ticket 03):
+    - อิมพลีเมนต์ 5 มิติรายงานเชิงลึก (Category Revenue, Top 5 Best-Selling CTE + `DENSE_RANK()`, Customer LTV, Download Velocity `EXTRACT(EPOCH)`, Monthly Trends CTE + `LAG()`)
+  - เขียนและรันชุดทดสอบ TDD 3 ชุดใหม่ (รวม 14 เคสใหม่) ผ่าน 100% รวมชุดทดสอบของระบบเป็น 58 เคสผ่านฉลุย
+  - ตรวจสอบ Typecheck (`tsc --noEmit`) 0 errors
+- **การตัดสินใจของมนุษย์ (Human Decision)**:
+  - สั่งเริ่มการอิมพลีเมนต์ตามสเปกและยอมรับผลการตรวจสอบการทำงานทั้งหมด
+
