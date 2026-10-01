@@ -341,6 +341,6 @@
     - คิวตรวจสอบสลิป [src/app/admin/orders/page.tsx](file:///c:/Users/bond/Documents/miniproject-db-e-book/src/app/admin/orders/page.tsx) อนุมัติ/ปฏิเสธสลิปโอนเงิน
     - ระบบจัดการแคตตาล็อก [src/app/admin/books/page.tsx](file:///c:/Users/bond/Documents/miniproject-db-e-book/src/app/admin/books/page.tsx) เพิ่มหนังสือ แก้ไขราคา และเปิด/ปิดการขาย
     - แดชบอร์ดวิเคราะห์ 5 มิติ [src/app/admin/analytics/page.tsx](file:///c:/Users/bond/Documents/miniproject-db-e-book/src/app/admin/analytics/page.tsx) แสดงสถิติและผลลัพธ์ของ SQL Window Functions & CTEs ทั้ง 5 มิติ
-  - ตรวจสอบความถูกต้องของ Typecheck (`tsc --noEmit`) 0 errors และชุดทดสอบระบบทั้งหมดรวม 105/105 เคสผ่านฉลุย
+  - ตรวจสอบความถูกต้องของ Typecheck (`tsc --noEmit`) 0 errors, ชุดทดสอบระบบทั้งหมดรวม 105/105 เคสผ่านฉลุย (`vitest run`), และคอมไพล์ผ่านฉลุยสมบูรณ์แบบทั้งระบบด้วย `next build` (รองรับ Server Components ด้วย `export const dynamic = 'force-dynamic'` ทั้ง 8 core views)
 - **การตัดสินใจของมนุษย์ (Human Decision)**:
   - สั่งเริ่มการอิมพลีเมนต์ตามสเปกและยอมรับผลการตรวจสอบการทำงานทั้งหมด
