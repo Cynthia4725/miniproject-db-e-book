@@ -21,7 +21,7 @@ export default async function AdminOrdersPage() {
       p.id AS payment_id,
       o.id AS order_id,
       o.order_number,
-      u.name AS user_name,
+      u.full_name AS user_name,
       u.email AS user_email,
       p.amount_paid,
       p.slip_image_url,
