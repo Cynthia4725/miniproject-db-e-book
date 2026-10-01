@@ -4,10 +4,10 @@
 
 **Blocked by:** 01: Lightweight Cookie Session, Role Guards & Demo Account Switcher Slice
 
-**Status:** ready-for-agent
+**Status:** completed
 
-- [ ] `/admin` route tree is protected by server-side role guard rejecting non-admin users.
-- [ ] `/admin/orders` renders payment verification queue for orders in `PAYMENT_SUBMITTED` status.
-- [ ] Admin Review Server Action allows approving payments (atomically transitioning to `PAID`, granting library access, minting download token) or rejecting with reason.
-- [ ] `/admin/books` enables administrators to list, add, and adjust catalog prices and availability.
-- [ ] `/admin/analytics` renders interactive dashboard visualizing all 5 advanced SQL analytics queries with KPI cards and tabular breakdowns.
+- [x] `/admin` route tree is protected by server-side role guard rejecting non-admin users.
+- [x] `/admin/orders` renders payment verification queue for orders in `PAYMENT_SUBMITTED` status.
+- [x] Admin Review Server Action allows approving payments (atomically transitioning to `PAID`, granting library access, minting download token) or rejecting with reason.
+- [x] `/admin/books` enables administrators to list, add, and adjust catalog prices and availability.
+- [x] `/admin/analytics` renders interactive dashboard visualizing all 5 advanced SQL analytics queries with KPI cards and tabular breakdowns.

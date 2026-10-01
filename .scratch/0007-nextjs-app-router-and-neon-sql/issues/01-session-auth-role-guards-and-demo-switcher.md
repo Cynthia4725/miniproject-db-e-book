@@ -4,10 +4,10 @@
 
 **Blocked by:** None (can start immediately)
 
-**Status:** ready-for-agent
+**Status:** completed
 
-- [ ] Lightweight HMAC-signed cookie session (`getCurrentUser`, `setSessionCookie`, `clearSessionCookie`) stores user ID, email, role, and name.
-- [ ] Demo Switcher action toggles session instantly between customer and admin personas.
-- [ ] `requireRole(['admin'])` blocks non-admin callers from executing protected actions with `ForbiddenError` (403).
-- [ ] Unauthenticated requests to protected endpoints return `UnauthorizedError` (401).
-- [ ] Floating navigation header renders current user identity, role badge, and demo switch buttons.
+- [x] Lightweight HMAC-signed cookie session (`getCurrentUser`, `setSessionCookie`, `clearSessionCookie`) stores user ID, email, role, and name.
+- [x] Demo Switcher action toggles session instantly between customer and admin personas.
+- [x] `requireRole(['admin'])` blocks non-admin callers from executing protected actions with `ForbiddenError` (403).
+- [x] Unauthenticated requests to protected endpoints return `UnauthorizedError` (401).
+- [x] Floating navigation header renders current user identity, role badge, and demo switch buttons.

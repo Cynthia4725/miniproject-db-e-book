@@ -324,3 +324,23 @@
   - สร้างไฟล์ Ticket ทั้ง 3 ฉบับพร้อม Acceptance Criteria ครบถ้วนใน `.scratch/0007-nextjs-app-router-and-neon-sql/issues/`
 - **การตัดสินใจของมนุษย์ (Human Decision)**:
   - ตรวจสอบและยืนยันการแบ่ง Tickets และลำดับ Blocking Edges ทั้งหมด
+
+### รอบที่ 26: Implementation & Test-Driven Development for Spec-0007 (/implement, /tdd)
+- **วันที่**: 2026-10-02
+- **โจทย์ที่ป้อนให้ AI**: ลงมือพัฒนาโค้ดตาม Tickets ของ Spec-0007 (Next.js App Router Architecture with Direct Neon SQL Execution) ทั้ง 3 Tickets โดยยึดหลัก TDD (Red-Green-Refactor)
+- **สิ่งที่ AI นำเสนอ**:
+  - Ticket 01: พัฒนาระบบ Session Auth แบบ Cookie ด้วย HMAC-SHA256 [src/lib/session.ts](file:///c:/Users/bond/Documents/miniproject-db-e-book/src/lib/session.ts) พร้อมคอมโพเนนต์ Demo Account Switcher [src/components/DemoSwitcher.tsx](file:///c:/Users/bond/Documents/miniproject-db-e-book/src/components/DemoSwitcher.tsx) และ [src/components/Navbar.tsx](file:///c:/Users/bond/Documents/miniproject-db-e-book/src/components/Navbar.tsx) ให้สลับระหว่าง Somchai (Customer) และ Admin ได้ในคลิกเดียว พร้อมชุดทดสอบ TDD [src/lib/session.test.ts](file:///c:/Users/bond/Documents/miniproject-db-e-book/src/lib/session.test.ts) ผ่าน 7/7 เคส
+  - Ticket 02: พัฒนา Customer Journey ด้วย React Server Components (RSC) และ Server Actions:
+    - หน้าหลักแคตตาล็อก [src/app/page.tsx](file:///c:/Users/bond/Documents/miniproject-db-e-book/src/app/page.tsx) รองรับตัวกรองหมวดหมู่และการค้นหา
+    - หน้ารายละเอียด [src/app/books/[id]/page.tsx](file:///c:/Users/bond/Documents/miniproject-db-e-book/src/app/books/[id]/page.tsx) พร้อมปุ่มเพิ่มลงตะกร้าและทดลองอ่าน
+    - หน้าตะกร้าสินค้า [src/app/cart/page.tsx](file:///c:/Users/bond/Documents/miniproject-db-e-book/src/app/cart/page.tsx) รองรับการลบหนังสือ ใส่โค้ดคูปอง และ Checkout
+    - หน้าชำระเงิน [src/app/orders/[order_number]/pay/page.tsx](file:///c:/Users/bond/Documents/miniproject-db-e-book/src/app/orders/[order_number]/pay/page.tsx) แสดง PromptPay QR และฟอร์มส่งสลิปโอนเงิน
+    - หน้าคลังหนังสือ [src/app/library/page.tsx](file:///c:/Users/bond/Documents/miniproject-db-e-book/src/app/library/page.tsx) แสดง e-Book ที่ซื้อแล้วพร้อมปุ่มดาวน์โหลด PDF
+  - Ticket 03: พัฒนา Administrator Operations Center & BI Analytics Dashboard:
+    - ตัวคุ้มครองสิทธิ์ [src/app/admin/layout.tsx](file:///c:/Users/bond/Documents/miniproject-db-e-book/src/app/admin/layout.tsx) ตรวจสอบบทบาทแอดมินก่อนเข้าถึง
+    - คิวตรวจสอบสลิป [src/app/admin/orders/page.tsx](file:///c:/Users/bond/Documents/miniproject-db-e-book/src/app/admin/orders/page.tsx) อนุมัติ/ปฏิเสธสลิปโอนเงิน
+    - ระบบจัดการแคตตาล็อก [src/app/admin/books/page.tsx](file:///c:/Users/bond/Documents/miniproject-db-e-book/src/app/admin/books/page.tsx) เพิ่มหนังสือ แก้ไขราคา และเปิด/ปิดการขาย
+    - แดชบอร์ดวิเคราะห์ 5 มิติ [src/app/admin/analytics/page.tsx](file:///c:/Users/bond/Documents/miniproject-db-e-book/src/app/admin/analytics/page.tsx) แสดงสถิติและผลลัพธ์ของ SQL Window Functions & CTEs ทั้ง 5 มิติ
+  - ตรวจสอบความถูกต้องของ Typecheck (`tsc --noEmit`) 0 errors และชุดทดสอบระบบทั้งหมดรวม 105/105 เคสผ่านฉลุย
+- **การตัดสินใจของมนุษย์ (Human Decision)**:
+  - สั่งเริ่มการอิมพลีเมนต์ตามสเปกและยอมรับผลการตรวจสอบการทำงานทั้งหมด

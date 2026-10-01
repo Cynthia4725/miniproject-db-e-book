@@ -50,5 +50,10 @@ export class InvalidStateTransitionError extends ConflictError {
     super(message, 'INVALID_STATE_TRANSITION');
     this.name = 'InvalidStateTransitionError';
   }
+}export class UnauthorizedError extends AppError {
+  constructor(message: string = 'Authentication required', code: string = 'UNAUTHORIZED') {
+    super(message, 401, code);
+    this.name = 'UnauthorizedError';
+  }
 }
 
