@@ -312,3 +312,15 @@
   - ตรวจสอบความถูกต้องของ Typecheck (`tsc --noEmit`) 0 errors และชุดทดสอบระบบทั้งหมดรวม 98/98 เคสผ่านฉลุย
 - **การตัดสินใจของมนุษย์ (Human Decision)**:
   - สั่งเริ่มการอิมพลีเมนต์ตามสเปกและยอมรับผลการตรวจสอบการทำงานทั้งหมด
+
+### รอบที่ 25: Tracer-Bullet Ticket Breakdown for Spec-0007 (/to-tickets)
+- **วันที่**: 2026-10-02
+- **โจทย์ที่ป้อนให้ AI**: ย่อยเอกสารข้อกำหนด Spec-0007 (Next.js App Router Architecture with Direct Neon SQL Execution) ออกเป็นชุดงานย่อยแบบ Tracer-Bullet Tickets
+- **สิ่งที่ AI นำเสนอ**:
+  - เสนอการซอยงานเป็น 3 Vertical Slices:
+    1. Ticket 01: Lightweight Cookie Session, Role Guards & Demo Account Switcher Slice (เริ่มได้ทันที)
+    2. Ticket 02: Customer Shopping Journey & Server Actions Slice (บล็อกโดย Ticket 01)
+    3. Ticket 03: Admin Verification Queue & 5D SQL Analytics Dashboard Slice (บล็อกโดย Ticket 01)
+  - สร้างไฟล์ Ticket ทั้ง 3 ฉบับพร้อม Acceptance Criteria ครบถ้วนใน `.scratch/0007-nextjs-app-router-and-neon-sql/issues/`
+- **การตัดสินใจของมนุษย์ (Human Decision)**:
+  - ตรวจสอบและยืนยันการแบ่ง Tickets และลำดับ Blocking Edges ทั้งหมด
