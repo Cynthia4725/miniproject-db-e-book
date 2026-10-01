@@ -401,3 +401,15 @@
   - ตรวจสอบผ่านการทดสอบ 105/105 tests, TypeScript 0 errors, Commit และ Push ขึ้น GitHub เรียบร้อย
 - **การตัดสินใจของมนุษย์ (Human Decision)**:
   - รายงาน Error และยอมรับการแก้ไข
+
+### รอบที่ 32: Requirements Grilling, Domain Modeling & Architectural Decision for Spec-0008 (/grill-with-docs)
+- **วันที่**: 2026-10-02
+- **โจทย์ที่ป้อนให้ AI**: สัมภาษณ์และเจาะลึก 3 ฟีเจอร์ใหม่: (1) อัปโหลดไฟล์สลิปเป็นรูปภาพ, (2) ตัวเลข Badge แจ้งเตือนสินค้าในตะกร้า, และ (3) ระบบ Login/Register สำหรับลูกค้าทั่วไปที่ทำงานร่วมกับ Demo Persona Switcher
+- **สิ่งที่ AI นำเสนอ**:
+  - วิเคราะห์และสัมภาษณ์โจทย์ผ่านกระบวนการ `/grill-with-docs` (Grilling + Domain Modeling)
+  - กำหนดการจัดเก็บรูปสลิปด้วย Base64 Data URL ลงคอลัมน์ `payments.slip_image_url` ใน Neon PostgreSQL โดยตรง เพื่อรักษาหลักการ 100% Zero-Dependency บน Vercel Serverless
+  - กำหนดการแสดงผล Cart Badge ด้วยการนับจำนวน `cart_items` ผ่าน RSC Revalidation
+  - ออกแบบระบบ Authenticated Customer Portal (`/login`, `/register`) ร่วมกับการเข้ารหัสรหัสผ่านด้วย `crypto.scrypt` โดยยังคงรักษาปุ่มสลับบัญชีแบบ 1 คลิกใน Demo Persona Switcher สำหรับให้อาจารย์ตรวจงานได้อย่างสะดวก
+  - จัดทำเอกสารสถาปัตยกรรม [docs/adr/0008-base64-slip-upload-cart-badge-and-auth-portal.md](file:///c:/Users/bond/Documents/miniproject-db-e-book/docs/adr/0008-base64-slip-upload-cart-badge-and-auth-portal.md), อัปเดตพจนานุกรมศัพท์ [GLOSSARY.md](file:///c:/Users/bond/Documents/miniproject-db-e-book/GLOSSARY.md), และจัดทำข้อกำหนดทางเทคนิค [docs/specs/0008-base64-slip-upload-cart-badge-and-auth-portal.md](file:///c:/Users/bond/Documents/miniproject-db-e-book/docs/specs/0008-base64-slip-upload-cart-badge-and-auth-portal.md)
+- **การตัดสินใจของมนุษย์ (Human Decision)**:
+  - ยืนยันแนวทางการออกแบบตามข้อเสนอแนะของ AI ครบทุกข้อ

@@ -69,3 +69,13 @@ _Avoid_: Link, download URL, access key
 **DownloadLog**:
 An immutable audit entry recorded each time an e-book file is transmitted to a user.
 _Avoid_: Access history, download history, telemetry
+
+### Navigation & Identity
+
+**CartItemBadge**:
+The real-time indicator on navigation elements displaying the count of distinct books currently held in the customer's active cart.
+_Avoid_: Cart counter, item tally, notification dot
+
+**CustomerRegistration**:
+The self-service procedure by which an unauthenticated visitor establishes a credentialed user account with customer permissions.
+_Avoid_: Signup, join, onboarding
