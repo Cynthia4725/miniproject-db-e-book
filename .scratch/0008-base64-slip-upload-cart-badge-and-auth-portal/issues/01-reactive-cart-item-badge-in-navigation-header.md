@@ -4,10 +4,10 @@
 
 **Blocked by:** None (can start immediately)
 
-**Status:** ready-for-agent
+**Status:** completed
 
-- [ ] `Navbar.tsx` queries the active customer's cart via `CartRepository` or direct SQL count.
-- [ ] If cart contains 1 or more items, render a distinct badge showing the count over/beside the cart icon.
-- [ ] If cart is empty, do not display a counter badge.
-- [ ] `addToCartAction`, `removeFromCartAction`, and `checkoutAction` trigger `revalidatePath('/', 'layout')` to keep badge in sync.
-- [ ] Badge container uses `suppressHydrationWarning` to remain resilient against client browser extensions.
+- [x] `Navbar.tsx` queries the active customer's cart via `CartRepository` or direct SQL count.
+- [x] If cart contains 1 or more items, render a distinct badge showing the count over/beside the cart icon.
+- [x] If cart is empty, do not display a counter badge.
+- [x] `addToCartAction`, `removeFromCartAction`, and `checkoutAction` trigger `revalidatePath('/', 'layout')` to keep badge in sync.
+- [x] Badge container uses `suppressHydrationWarning` to remain resilient against client browser extensions.

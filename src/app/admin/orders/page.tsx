@@ -1,5 +1,6 @@
 import { getDatabaseExecutor } from '@/db/client';
 import { verifyPaymentAction } from '@/app/actions/admin.actions';
+import { SlipPreviewModal } from '@/components/SlipPreviewModal';
 
 export const dynamic = 'force-dynamic';
 
@@ -79,15 +80,12 @@ export default async function AdminOrdersPage() {
                       ฿{Number(order.amount_paid).toLocaleString()}
                     </td>
                     <td className="py-3 px-4">
-                      <a
-                        href={order.slip_image_url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        suppressHydrationWarning
-                        className="inline-flex items-center gap-1 text-emerald-600 hover:text-emerald-800 underline font-medium"
-                      >
-                        <span>🧾 ดูสลิป</span>
-                      </a>
+                      <SlipPreviewModal
+                        orderNumber={order.order_number}
+                        userName={order.user_name}
+                        amountPaid={order.amount_paid}
+                        slipImageUrl={order.slip_image_url}
+                      />
                     </td>
                     <td className="py-3 px-4 text-right">
                       <div className="flex items-center justify-end gap-2">

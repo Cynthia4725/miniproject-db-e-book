@@ -64,12 +64,30 @@ export function DemoSwitcher({ currentUser }: DemoSwitcherProps) {
           >
             🛡️ สลับเป็น แอดมิน (Admin)
           </button>
+
+          <span className="text-slate-600">|</span>
+
+          <a
+            href="/login"
+            suppressHydrationWarning
+            className="px-2 py-1 rounded text-slate-300 hover:text-white hover:bg-slate-800 transition-colors"
+          >
+            เข้าสู่ระบบ
+          </a>
+          <a
+            href="/register"
+            suppressHydrationWarning
+            className="px-2 py-1 rounded text-emerald-400 hover:text-emerald-300 hover:bg-slate-800 transition-colors"
+          >
+            สมัครสมาชิก
+          </a>
+
           {currentUser && (
             <button
               type="button"
               disabled={isPending}
               onClick={handleLogout}
-              className="px-2.5 py-1 rounded font-medium bg-red-950/40 hover:bg-red-900/60 text-red-300 border border-red-800/50 transition-colors"
+              className="px-2.5 py-1 rounded font-medium bg-red-950/40 hover:bg-red-900/60 text-red-300 border border-red-800/50 transition-colors ml-1"
             >
               ออก
             </button>

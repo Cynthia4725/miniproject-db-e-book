@@ -23,6 +23,7 @@ export async function addToCartAction(bookId: number | string): Promise<void> {
   await cartRepo.addItem(cart.id, bookId);
   revalidatePath('/cart');
   revalidatePath('/');
+  revalidatePath('/', 'layout');
 }
 
 export async function removeFromCartAction(bookId: number | string): Promise<void> {
@@ -31,6 +32,7 @@ export async function removeFromCartAction(bookId: number | string): Promise<voi
   const cart = await cartRepo.getOrCreateCart(user.userId);
   await cartRepo.removeItem(cart.id, bookId);
   revalidatePath('/cart');
+  revalidatePath('/', 'layout');
 }
 
 export async function checkoutAction(couponOrFormData?: string | FormData): Promise<void> {
@@ -50,6 +52,7 @@ export async function checkoutAction(couponOrFormData?: string | FormData): Prom
   });
 
   revalidatePath('/cart');
+  revalidatePath('/', 'layout');
   redirect(`/orders/${result.orderNumber}/pay`);
 }
 

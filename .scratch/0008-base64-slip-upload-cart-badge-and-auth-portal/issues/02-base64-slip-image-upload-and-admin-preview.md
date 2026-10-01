@@ -4,11 +4,11 @@
 
 **Blocked by:** None (can start immediately)
 
-**Status:** ready-for-agent
+**Status:** completed
 
-- [ ] `/orders/[order_number]/pay` payment form accepts file selection (`<input type="file" accept="image/*">`).
-- [ ] Client component or form script provides an instant live image preview of the chosen file.
-- [ ] Enforces maximum file size validation (<= 2MB) with clear alert on oversized images.
-- [ ] Converts image to Base64 Data URL string before or during Server Action submission.
-- [ ] `payments.slip_image_url` successfully persists the Base64 Data URL string in Neon PostgreSQL.
-- [ ] `/admin/orders` table renders the uploaded image thumbnail cleanly with a click-to-view overlay or link.
+- [x] `/orders/[order_number]/pay` payment form accepts file selection (`<input type="file" accept="image/*">`).
+- [x] Client component or form script provides an instant live image preview of the chosen file.
+- [x] Enforces maximum file size validation (<= 2MB) with clear alert on oversized images.
+- [x] Converts image to Base64 Data URL string before or during Server Action submission.
+- [x] `payments.slip_image_url` successfully persists the Base64 Data URL string in Neon PostgreSQL.
+- [x] `/admin/orders` table renders the uploaded image thumbnail cleanly with a click-to-view overlay or link.

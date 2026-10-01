@@ -425,3 +425,25 @@
   - จัดทำไฟล์ Ticket ทั้ง 3 ฉบับพร้อมเกณฑ์การยอมรับ (Acceptance Criteria) ลงในไดเรกทอรี `.scratch/0008-base64-slip-upload-cart-badge-and-auth-portal/issues/`
 - **การตัดสินใจของมนุษย์ (Human Decision)**:
   - ตรวจสอบและให้ความเห็นชอบกับการแบ่ง Tickets ทั้ง 3 ใบ
+
+### รอบที่ 34: Implementation of Spec-0008 Tickets (/implement)
+- **วันที่**: 2026-10-02
+- **โจทย์ที่ป้อนให้ AI**: ดำเนินการพัฒนาระบบตาม Tracer-Bullet Tickets ทั้งหมดใน `.scratch/0008-base64-slip-upload-cart-badge-and-auth-portal`
+- **สิ่งที่ AI สร้างและดำเนินการ**:
+  1. **Ticket 01 (Reactive Cart Badge)**:
+     - พัฒนาการแสดงผลจำนวนชิ้นสินค้าที่ไม่ซ้ำ (`cart_items`) บนไอคอนตะกร้าใน Navbar (`src/components/Navbar.tsx`)
+     - ผูก Server Actions (`addToCartAction`, `removeFromCartAction`, `checkoutAction`) ให้เรียก `revalidatePath('/', 'layout')` เพื่อให้ Cart Badge อัปเดตทันที
+  2. **Ticket 02 (Interactive Base64 Slip Upload & Admin Preview)**:
+     - พัฒนาคอมโพเนนต์ `SlipUploader.tsx` สำหรับ `/orders/[order_number]/pay` รองรับการเลือกไฟล์ PNG/JPEG/WebP ตรวจสอบขนาดไม่เกิน 2MB แสดงพรีวิวภาพสด และแปลงเป็น Base64 Data URL สำหรับส่งเข้า Server Action
+     - พัฒนาคอมโพเนนต์ `SlipPreviewModal.tsx` ในหน้าคิวตรวจสอบของผู้ดูแลระบบ (`/admin/orders`) แสดงภาพ Thumbnail สลิปพร้อมระบบ Modal ขยายดูภาพสลิปจริงขนาดใหญ่
+     - กำหนด `serverActions: { bodySizeLimit: '5mb' }` ใน `next.config.js` เพื่อรองรับ Payload ขนาดใหญ่ของรูปภาพสลิปแบบ Base64
+  3. **Ticket 03 (Customer Registration, scrypt Password Hashing & Login Portal)**:
+     - สร้างยูทิลิตี้เข้ารหัสและตรวจสอบรหัสผ่าน `src/lib/password.ts` ด้วย Node.js `crypto.scrypt` พร้อม Salt สุ่ม 16 ไบต์ และ Constant-Time Comparison (`timingSafeEqual`)
+     - พัฒนาโมดูล `UserRepository` ใน `src/modules/users/user.repository.ts`
+     - สร้าง Server Actions `registerAction` และ `loginAction` ใน `src/app/actions/auth.actions.ts` ป้องกันอีเมลซ้ำและออก Session Cookie อัตโนมัติ
+     - พัฒนาหน้าจอ `/register` และ `/login` พร้อมระบบ Quick-Fill บัญชีทดสอบสำหรับให้อาจารย์และผู้ตรวจงานทดสอบได้สะดวกรวดเร็ว
+     - เพิ่มลิงก์เข้าสู่ระบบและสมัครสมาชิกในแถบ Demo Persona Switcher (`src/components/DemoSwitcher.tsx`)
+     - เขียนชุดทดสอบครอบคลุม 121/121 การทดสอบในระบบ ผ่านฉลุย 100% พร้อมทดสอบ `tsc --noEmit` และ `next build` สำเร็จเรียบร้อย
+- **การตัดสินใจของมนุษย์ (Human Decision)**:
+  - สั่งการให้เริ่มพัฒนาระบบตาม Tickets ทั้งหมด และเตรียมส่งมอบงาน
+

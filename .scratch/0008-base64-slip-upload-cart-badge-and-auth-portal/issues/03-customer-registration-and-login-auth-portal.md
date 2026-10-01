@@ -4,12 +4,12 @@
 
 **Blocked by:** None (can start immediately)
 
-**Status:** ready-for-agent
+**Status:** completed
 
-- [ ] Password hashing utility (`hashPassword`, `verifyPassword`) built using Node.js standard `crypto.scrypt`.
-- [ ] `/register` page provides full name, email, phone, password, and confirmation inputs with validation.
-- [ ] Registration Server Action rejects duplicate emails with a descriptive error message and persists user to `users` table.
-- [ ] Registration automatically signs in the new customer with `role = 'customer'` and redirects to `/`.
-- [ ] `/login` page allows logging in with registered email and password, setting signed session cookie upon success.
-- [ ] Demo Persona Switcher exposes quick links to `/login` and `/register`, alongside the one-click `Admin` and `Somchai` demo buttons.
-- [ ] Unit tests verify password hashing, duplicate email handling, and authentication flow.
+- [x] Password hashing utility (`hashPassword`, `verifyPassword`) built using Node.js standard `crypto.scrypt`.
+- [x] `/register` page provides full name, email, phone, password, and confirmation inputs with validation.
+- [x] Registration Server Action rejects duplicate emails with a descriptive error message and persists user to `users` table.
+- [x] Registration automatically signs in the new customer with `role = 'customer'` and redirects to `/`.
+- [x] `/login` page allows logging in with registered email and password, setting signed session cookie upon success.
+- [x] Demo Persona Switcher exposes quick links to `/login` and `/register`, alongside the one-click `Admin` and `Somchai` demo buttons.
+- [x] Unit tests verify password hashing, duplicate email handling, and authentication flow.
