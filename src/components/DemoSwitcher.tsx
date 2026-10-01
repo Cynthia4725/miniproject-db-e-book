@@ -24,12 +24,12 @@ export function DemoSwitcher({ currentUser }: DemoSwitcherProps) {
   };
 
   return (
-    <div className="bg-slate-900 border-b border-slate-800 text-xs py-2 px-4 text-slate-300">
-      <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3">
-        <div className="flex items-center gap-2">
+    <div className="bg-slate-900 border-b border-slate-800 text-xs py-2 px-4 text-slate-300" suppressHydrationWarning>
+      <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3" suppressHydrationWarning>
+        <div className="flex items-center gap-2" suppressHydrationWarning>
           <span className="font-semibold text-emerald-400">🎓 อาจารย์ / กรรมการตรวจงาน (Demo Persona Switcher):</span>
           {currentUser ? (
-            <span className="flex items-center gap-1 bg-slate-800 px-2 py-0.5 rounded border border-slate-700">
+            <span className="flex items-center gap-1 bg-slate-800 px-2 py-0.5 rounded border border-slate-700" suppressHydrationWarning>
               <span className={`inline-block w-2 h-2 rounded-full ${currentUser.role === 'admin' ? 'bg-amber-400' : 'bg-emerald-400'}`} />
               <strong className="text-white">{currentUser.name}</strong>
               <span className="text-slate-400">({currentUser.role.toUpperCase()})</span>
@@ -39,7 +39,7 @@ export function DemoSwitcher({ currentUser }: DemoSwitcherProps) {
           )}
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2" suppressHydrationWarning>
           <button
             type="button"
             disabled={isPending}

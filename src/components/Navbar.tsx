@@ -30,30 +30,34 @@ export async function Navbar() {
               </div>
             </div>
 
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-4" suppressHydrationWarning>
               <Link
                 href="/cart"
+                suppressHydrationWarning
                 className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-200 hover:border-emerald-500 hover:text-emerald-600 text-slate-700 text-sm font-medium transition-colors"
               >
                 <span>🛒 ตะกร้า (Cart)</span>
               </Link>
 
               {currentUser?.role === 'admin' && (
-                <div className="flex items-center gap-2 border-l border-slate-200 pl-4">
+                <div className="flex items-center gap-2 border-l border-slate-200 pl-4" suppressHydrationWarning>
                   <Link
                     href="/admin/orders"
+                    suppressHydrationWarning
                     className="px-2.5 py-1 rounded bg-amber-50 text-amber-700 hover:bg-amber-100 border border-amber-200 text-xs font-semibold"
                   >
                     คิวสลิป (Orders)
                   </Link>
                   <Link
                     href="/admin/books"
+                    suppressHydrationWarning
                     className="px-2.5 py-1 rounded bg-amber-50 text-amber-700 hover:bg-amber-100 border border-amber-200 text-xs font-semibold"
                   >
                     จัดการหนังสือ (Books)
                   </Link>
                   <Link
                     href="/admin/analytics"
+                    suppressHydrationWarning
                     className="px-2.5 py-1 rounded bg-amber-50 text-amber-700 hover:bg-amber-100 border border-amber-200 text-xs font-semibold"
                   >
                     รายงาน 5 มิติ (Analytics)
