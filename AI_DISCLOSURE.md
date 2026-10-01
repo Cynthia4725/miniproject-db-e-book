@@ -365,3 +365,18 @@
   - ผ่านการทดสอบ Vitest 105/105 เคส, TypeScript 0 errors, และ `next build` ผ่านฉลุย พร้อม Push ขึ้น GitHub
 - **การตัดสินใจของมนุษย์ (Human Decision)**:
   - รายงาน Error ทั้ง 2 จุดและยอมรับแนวทางการแก้ไขทางสถาปัตยกรรมของ AI
+
+### รอบที่ 29: Resolving Webpack Runtime TypeError & Server Component Cookie Restrictions
+- **วันที่**: 2026-10-02
+- **โจทย์ที่ป้อนให้ AI**: แก้ไข Runtime TypeError: `__webpack_modules__[moduleId] is not a function`
+- **สิ่งที่ AI นำเสนอ**:
+  - วิเคราะห์สาเหตุหลัก 2 ประการ:
+    1. มีการเรียกใช้ `setSessionCookie()` โดยตรงใน Server Components ([src/app/cart/page.tsx](file:///c:/Users/bond/Documents/miniproject-db-e-book/src/app/cart/page.tsx) และ [src/app/library/page.tsx](file:///c:/Users/bond/Documents/miniproject-db-e-book/src/app/library/page.tsx)) ซึ่งขัดต่อข้อกำหนดของ Next.js App Router (ไม่อนุญาตให้แก้ไข Cookie ระหว่าง Render Server Component) ทำให้ SSR Crash และพ่น Error สู่ Webpack Client Stream
+    2. มีการประกาศฟังก์ชัน `async () => { 'use server'; ... }` แบบ Anonymous Inline Closure ภายใน Loop `.map()` ทำให้ Webpack Bundler ไม่สามารถ Resolve Module ID ของ Server Actions ได้อย่างถูกต้อง
+  - การแก้ไข:
+    1. ปรับปรุง [src/app/cart/page.tsx](file:///c:/Users/bond/Documents/miniproject-db-e-book/src/app/cart/page.tsx) และ [src/app/library/page.tsx](file:///c:/Users/bond/Documents/miniproject-db-e-book/src/app/library/page.tsx) ให้ใช้ Fallback In-memory User (`DEMO_USERS.customer`) โดยไม่เรียก Mutate Cookie ในฝั่ง Read Component
+    2. ปรับปรุง Server Actions ทั้งหมดใน [src/app/actions/cart.actions.ts](file:///c:/Users/bond/Documents/miniproject-db-e-book/src/app/actions/cart.actions.ts) ให้รองรับการ Bind พารามิเตอร์ (`.bind(null, id)`) และ FormData โดยตรง ลบ Inline `'use server'` ในคอมโพเนนต์ออกทั้งหมด
+    3. เคลียร์ Stale Cache ใน `.next` และ Restart Dev Server ใหม่
+  - ผลลัพธ์: ทุก Route (`/`, `/cart`, `/library`, `/books/[id]`, `/orders/[order_number]/pay`, `/admin/*`) ตอบกลับ 200 OK ราบรื่น ไม่พบ Webpack TypeError ใดๆ
+- **การตัดสินใจของมนุษย์ (Human Decision)**:
+  - แจ้งรายงานบั๊ก Runtime TypeError และยอมรับการปรับปรุงโครงสร้าง Server Actions ของ AI
