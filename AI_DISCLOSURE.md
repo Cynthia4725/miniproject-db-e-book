@@ -391,3 +391,13 @@
   - ทดสอบยิง Request หน้า `/admin/orders` ด้วย Session Cookie แอดมิน พบสถานะตอบกลับ 200 OK
 - **การตัดสินใจของมนุษย์ (Human Decision)**:
   - แจ้ง Error และยอมรับการแก้ไขชื่อคอลัมน์ให้ตรงกับ 3NF Relational Schema
+
+### รอบที่ 31: Resolving Admin Orders Duplicate Key & Admin Layout Hydration Warnings
+- **วันที่**: 2026-10-02
+- **โจทย์ที่ป้อนให้ AI**: แก้ไข Error 2 จุด: (1) `Encountered two children with the same key, '1'` ในหน้า [src/app/admin/orders/page.tsx](file:///c:/Users/bond/Documents/miniproject-db-e-book/src/app/admin/orders/page.tsx) และ (2) React Hydration Mismatch ใน [src/app/admin/layout.tsx](file:///c:/Users/bond/Documents/miniproject-db-e-book/src/app/admin/layout.tsx)
+- **สิ่งที่ AI นำเสนอ**:
+  - แก้ไข Error 1: ในตารางคิวตรวจสลิป ข้อมูลแต่ละแถวคือรายการชำระเงิน (`payments`) ซึ่ง 1 คำสั่งซื้อ (`order_id`) สามารถมีประวัติการส่งสลิปหรือชำระเงินได้มากกว่า 1 ครั้ง การใช้ `key={order.order_id}` จึงทำให้เกิดคีย์ซ้ำกัน จึงเปลี่ยนมาใช้ Primary Key ของรายการชำระเงินโดยตรงคือ `key={order.payment_id}` ซึ่งไม่ซ้ำกันแน่นอน 100%
+  - แก้ไข Error 2: เพิ่ม `suppressHydrationWarning` ให้กับแท็บนำทางแอดมินใน [src/app/admin/layout.tsx](file:///c:/Users/bond/Documents/miniproject-db-e-book/src/app/admin/layout.tsx) และลิงก์ดูสลิปใน [src/app/admin/orders/page.tsx](file:///c:/Users/bond/Documents/miniproject-db-e-book/src/app/admin/orders/page.tsx) ป้องกัน Browser Extension แทรกคลาสบนแท็ก `<a>`
+  - ตรวจสอบผ่านการทดสอบ 105/105 tests, TypeScript 0 errors, Commit และ Push ขึ้น GitHub เรียบร้อย
+- **การตัดสินใจของมนุษย์ (Human Decision)**:
+  - รายงาน Error และยอมรับการแก้ไข
