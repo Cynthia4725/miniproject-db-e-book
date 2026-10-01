@@ -262,3 +262,28 @@
 - **การตัดสินใจของมนุษย์ (Human Decision)**:
   - สั่งเริ่มการอิมพลีเมนต์ตามสเปกและยอมรับผลการตรวจสอบการทำงานทั้งหมด
 
+### รอบที่ 21: Tracer-Bullet Ticket Breakdown for Spec-0005 (/to-tickets)
+- **วันที่**: 2026-10-02
+- **โจทย์ที่ป้อนให้ AI**: ย่อยเอกสารข้อกำหนด Spec-0005 (Zero-External-Dependency Digital Asset Delivery Strategy) ออกเป็นชุดงานย่อยแบบ Tracer-Bullet Tickets
+- **สิ่งที่ AI นำเสนอ**:
+  - เสนอการซอยงานเป็น 3 Vertical Slices:
+    1. Ticket 01: Zero-Dependency Local Static Asset Provisioning Slice (เริ่มได้ทันที)
+    2. Ticket 02: Gated Digital Fulfillment Route Handler Slice (บล็อกโดย Ticket 01)
+    3. Ticket 03: Atomic Telemetry Ingestion & Audit Integration Slice (บล็อกโดย Ticket 02)
+  - สร้างไฟล์ Ticket ทั้ง 3 ฉบับพร้อม Acceptance Criteria ครบถ้วนใน `.scratch/0005-asset-delivery/issues/`
+- **การตัดสินใจของมนุษย์ (Human Decision)**:
+  - ตรวจสอบและยืนยันการแบ่ง Tickets และลำดับ Blocking Edges ทั้งหมด
+
+### รอบที่ 22: Implementation & Test-Driven Development for Spec-0005 (/implement, /tdd)
+- **วันที่**: 2026-10-02
+- **โจทย์ที่ป้อนให้ AI**: ลงมือพัฒนาโค้ดตาม Tickets ของ Spec-0005 (Zero-External-Dependency Digital Asset Delivery Strategy) ทั้ง 3 Tickets โดยยึดหลัก TDD (Red-Green-Refactor)
+- **สิ่งที่ AI นำเสนอ**:
+  - Ticket 01: สร้างไฟล์ PDF จำลองฉบับสมบูรณ์ [public/sample-ebook.pdf](file:///c:/Users/bond/Documents/miniproject-db-e-book/public/sample-ebook.pdf) ตามมาตรฐาน PDF-1.4 และพัฒนาโมดูล [src/modules/fulfillment/asset.service.ts](file:///c:/Users/bond/Documents/miniproject-db-e-book/src/modules/fulfillment/asset.service.ts) มีฟังก์ชัน `getSamplePdfPath`, `getSamplePdfBuffer`, และ `sanitizeDownloadFilename` ทำความสะอาดชื่อไฟล์ ปราศจากอักขระต้องห้ามของ OS และป้องกัน `.pdf.pdf` พร้อมชุดทดสอบ TDD 4 เคสผ่าน 100%
+  - Ticket 02 & Ticket 03: พัฒนา Next.js Route Handler [src/app/api/books/download/route.ts](file:///c:/Users/bond/Documents/miniproject-db-e-book/src/app/api/books/download/route.ts)
+    - รองรับการตรวจสอบโทเค็นดาวน์โหลดแบบ Cryptographic Gating: ขาดโทเค็น (400), โทเค็นไม่พบ (404), โทเค็นถูกระงับหรือโควตาหมด (403), โทเค็นหมดอายุ (410)
+    - บันทึก Telemetry และอัปเดตโควตาแบบอะตอมิก: เพิ่ม `download_count` ใน `download_tokens` และเพิ่มบันทึกใน `download_logs` พร้อมข้อมูล IP Address (`x-forwarded-for`) และ User-Agent
+    - สตรีมไฟล์ PDF แท้จริงพร้อม Header `Content-Type: application/pdf`, `Content-Disposition: attachment; filename="..."`, และ `Cache-Control: no-store, private`
+    - เขียนและรันชุดทดสอบ TDD [src/app/api/books/download/route.test.ts](file:///c:/Users/bond/Documents/miniproject-db-e-book/src/app/api/books/download/route.test.ts) 7 เคสผ่านฉลุย
+  - ตรวจสอบความถูกต้องของ Typecheck (`tsc --noEmit`) 0 errors และชุดทดสอบระบบทั้งหมดรวม 83/83 เคสผ่าน 100%
+- **การตัดสินใจของมนุษย์ (Human Decision)**:
+  - สั่งเริ่มการอิมพลีเมนต์ตามสเปกและยอมรับผลการตรวจสอบการทำงานทั้งหมด
