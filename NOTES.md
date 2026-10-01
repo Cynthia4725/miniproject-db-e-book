@@ -49,9 +49,12 @@
   - `download_tokens`: Temporary secure tokens with expiration time and maximum download limits.
   - `download_logs`: Audit trail recording `user_id`, `book_id`, `downloaded_at`, `ip_address`, `user_agent`.
 
-## 5. Confirmed Architectural Foundations (Round 3 Decisions)
+## 5. Confirmed Architectural Foundations (Round 3 & 4 Decisions)
 - **Primary Key Strategy**: Hybrid. Internal `BIGINT GENERATED ALWAYS AS IDENTITY` for fast relational joins and indexes; UUID v4 for external identifiers (`order_number`, `download_tokens.token`) for confidentiality and tamper-proof links.
 - **File Asset Architecture**: Static assets & mock files. High-res book covers and mock slip assets using reliable web URLs / base64; real sample PDF served directly via `/public/sample-ebook.pdf` to guarantee 100% reliable zero-dependency download demo.
+- **Web App Stack & Runtime**: Next.js (App Router, React Server Components & Server Actions) with Tailwind CSS deployed on Vercel.
+- **Database Access Pattern**: Direct parameterized SQL using `@neondatabase/serverless` HTTP driver (`sql\`...\``) running inside server components and server actions without heavy ORM.
+- **Authentication Strategy**: Encrypted HTTP-only session cookies with built-in Demo Account Switcher (`Customer: somchai@example.com` vs `Admin: admin@ebookstore.com`) for friction-free evaluation.
 - **Sample Dataset Theme & Scale**:
   - Theme: Tech & Business E-Books.
   - Scale: 5 Categories, ~20 Books, 8-10 Authors, 3 Publishers, 10-15 Customers, 2 Admins, 25-35 historical orders across a 3-4 month window, and 40-50 download audit logs.
@@ -60,7 +63,8 @@
   - Admin Journey (3 screens): Slip Verification & Order Approval, Catalog Book Management, Business Analytics Dashboard.
 
 ## 6. Current Phase
-- **Phase**: Formalizing Workflow Specifications (`workflows/*.md`), Database Relational Schema (ERD & Data Dictionary), and Analytical SQL Specifications.
+- **Phase**: Architecture, ADRs (0001-0007), Domain Glossary, and Specifications Complete. Ready for next step (e.g. Next ADR spec or DDL SQL Script).
+
 
 
 

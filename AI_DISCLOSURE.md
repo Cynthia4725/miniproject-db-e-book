@@ -70,5 +70,100 @@
 - **การตัดสินใจของมนุษย์ (Human Decision)**:
   - อนุมัติการบันทึก ADR ทั้งหมด 6 ฉบับอย่างเป็นทางการ
 
+### รอบที่ 5: Feature Specification Synthesis (/to-spec)
+- **วันที่**: 2026-10-02
+- **โจทย์ที่ป้อนให้ AI**: สังเคราะห์และสร้างเอกสาร Specification ฉบับสมบูรณ์สำหรับ ADR-0001 (Hybrid Identifier Strategy)
+- **สิ่งที่ AI นำเสนอ**:
+  - ร่างจุดทดสอบ (Test Seams) ระดับสูงสุดที่จุดเชื่อมต่อ Data Access & DTO Mapping
+  - สังเคราะห์ User Stories แบบละเอียดครอบคลุม Customer, Admin, Security Auditor, DB Evaluator, และ Developer
+  - กำหนด Implementation Decisions และ Testing Decisions ตามเทมเพลตมาตรฐาน และบันทึกเป็นเอกสาร [0001-hybrid-id-strategy.md](file:///c:/Users/bond/Documents/miniproject-db-e-book/docs/specs/0001-hybrid-id-strategy.md) ติดป้ายกำกับ `ready-for-agent`
+- **การตัดสินใจของมนุษย์ (Human Decision)**:
+  - ยืนยันความเห็นชอบต่อขอบเขตและ Seams การทดสอบของสเปก
+
+### รอบที่ 6: Web Application Stack Specification (/grill-with-docs)
+- **วันที่**: 2026-10-02
+- **โจทย์ที่ป้อนให้ AI**: ระบุสแตกของ Web Application ที่จะนำไป Deploy บน Vercel โดยเลือกใช้ Next.js
+- **สิ่งที่ AI นำเสนอ**:
+  - ท้าทายและนำเสนอสถาปัตยกรรม Next.js App Router (React Server Components + Server Actions)
+  - แนะนำการรัน Parameterized Raw SQL ตรงๆ ผ่าน `@neondatabase/serverless` HTTP driver ป้องกันปัญหา Connection Exhaustion
+  - แนะนำระบบ Session Cookie ที่มี Demo Account Switcher เพื่อให้กรรมการตรวจงานสลับบทบาท Customer/Admin ได้สะดวก
+  - แนะนำการใช้ Tailwind CSS สำหรับจัดสไตล์
+  - บันทึกเป็นเอกสาร [ADR 0007: Next.js App Router Architecture with Direct Neon SQL Execution](file:///c:/Users/bond/Documents/miniproject-db-e-book/docs/adr/0007-nextjs-app-router-and-neon-sql.md)
+- **การตัดสินใจของมนุษย์ (Human Decision)**:
+  - อนุมัติตามคำแนะนำทั้งหมด เพื่อให้สแตกฝั่งเว็บสนับสนุนการเขียนคำสั่ง SQL สำหรับวิชา Database ได้อย่างสมบูรณ์แบบ
+
+### รอบที่ 7: Feature Specification Synthesis for ADR-0002 (/to-spec)
+- **วันที่**: 2026-10-02
+- **โจทย์ที่ป้อนให้ AI**: สังเคราะห์และสร้างเอกสาร Specification ฉบับสมบูรณ์สำหรับ ADR-0002 (Order Payment Lifecycle and Decoupled Fulfillment)
+- **สิ่งที่ AI นำเสนอ**:
+  - ร่างจุดทดสอบ (Test Seams) ระดับสูงสุดที่จุดเชื่อมต่อ Order & Payment Lifecycle Seam (The State Machine & Transaction Boundary)
+  - สังเคราะห์ User Stories แบบละเอียด 18 ข้อ ครอบคลุม Customer, Store Admin, Database Evaluator/อาจารย์, และ Security Auditor
+  - กำหนด Implementation Decisions และ Testing Decisions ตามเทมเพลตมาตรฐาน และบันทึกเป็นเอกสาร [0002-order-payment-fulfillment-state-machine.md](file:///c:/Users/bond/Documents/miniproject-db-e-book/docs/specs/0002-order-payment-fulfillment-state-machine.md) ติดป้ายกำกับ `ready-for-agent`
+- **การตัดสินใจของมนุษย์ (Human Decision)**:
+  - ยืนยันความเห็นชอบต่อขอบเขตและ Seams การทดสอบของสเปก
+
+### รอบที่ 8: Feature Specification Synthesis for ADR-0003 (/to-spec)
+- **วันที่**: 2026-10-02
+- **โจทย์ที่ป้อนให้ AI**: สังเคราะห์และสร้างเอกสาร Specification ฉบับสมบูรณ์สำหรับ ADR-0003 (Neon Serverless PostgreSQL with Direct SQL Queries)
+- **สิ่งที่ AI นำเสนอ**:
+  - ร่างจุดทดสอบ (Test Seams) ระดับสูงสุดที่จุดเชื่อมต่อ Database Client & Query Execution Boundary (The Neon SQL Execution Seam)
+  - สังเคราะห์ User Stories 15 ข้อ ครอบคลุม Database Evaluator/อาจารย์, Student Developer, DevOps, Customer, Store Admin, และ Security Auditor
+  - กำหนด Implementation Decisions เรื่อง HTTP driver, Parameterized query tagging, Transaction management, และ Constraint error mapping
+  - บันทึกเป็นเอกสาร [0003-neon-serverless-postgresql.md](file:///c:/Users/bond/Documents/miniproject-db-e-book/docs/specs/0003-neon-serverless-postgresql.md) ติดป้ายกำกับ `ready-for-agent`
+- **การตัดสินใจของมนุษย์ (Human Decision)**:
+  - ยืนยันความเห็นชอบต่อขอบเขตและ Seams การทดสอบของสเปก
+
+### รอบที่ 9: Feature Specification Synthesis for ADR-0004 (/to-spec)
+- **วันที่**: 2026-10-02
+- **โจทย์ที่ป้อนให้ AI**: สังเคราะห์และสร้างเอกสาร Specification ฉบับสมบูรณ์สำหรับ ADR-0004 (Relational Junction Tables Over PostgreSQL JSONB or Native Arrays)
+- **สิ่งที่ AI นำเสนอ**:
+  - ร่างจุดทดสอบ (Test Seams) ระดับสูงสุดที่จุดเชื่อมต่อ Catalog Relational Boundary (The Catalog Data Access & Constraint Seam)
+  - สังเคราะห์ User Stories 15 ข้อ ครอบคลุม Customer, Store Admin, Database Evaluator/อาจารย์, DBA, และ Developer
+  - กำหนด Implementation Decisions เกี่ยวกับตาราง `book_categories`, `book_authors`, Composite Primary Keys, Foreign Key Cascades, และการทำ Normalization (1NF–3NF/BCNF)
+  - บันทึกเป็นเอกสาร [0004-relational-junction-tables-over-jsonb.md](file:///c:/Users/bond/Documents/miniproject-db-e-book/docs/specs/0004-relational-junction-tables-over-jsonb.md) ติดป้ายกำกับ `ready-for-agent`
+- **การตัดสินใจของมนุษย์ (Human Decision)**:
+  - ยืนยันความเห็นชอบต่อขอบเขตและ Seams การทดสอบของสเปก
+
+### รอบที่ 10: Feature Specification Synthesis for ADR-0005 (/to-spec)
+- **วันที่**: 2026-10-02
+- **โจทย์ที่ป้อนให้ AI**: สังเคราะห์และสร้างเอกสาร Specification ฉบับสมบูรณ์สำหรับ ADR-0005 (Zero-External-Dependency Digital Asset Delivery Strategy)
+- **สิ่งที่ AI นำเสนอ**:
+  - ร่างจุดทดสอบ (Test Seams) ระดับสูงสุดที่จุดเชื่อมต่อ Asset Delivery & Telemetry Boundary (The Download Gateway Seam)
+  - สังเคราะห์ User Stories 15 ข้อ ครอบคลุม Customer, Store Admin, Database Evaluator/อาจารย์, Security Auditor, และ DevOps
+  - กำหนด Implementation Decisions เรื่องการเสิร์ฟไฟล์ PDF จริงจาก `/public/sample-ebook.pdf`, การตรวจสอบวันหมดอายุ/โควตา, และการบันทึกประวัติลง `download_logs`
+  - บันทึกเป็นเอกสาร [0005-zero-external-dependency-asset-delivery.md](file:///c:/Users/bond/Documents/miniproject-db-e-book/docs/specs/0005-zero-external-dependency-asset-delivery.md) ติดป้ายกำกับ `ready-for-agent`
+- **การตัดสินใจของมนุษย์ (Human Decision)**:
+  - ยืนยันความเห็นชอบต่อขอบเขตและ Seams การทดสอบของสเปก
+
+### รอบที่ 11: Feature Specification Synthesis for ADR-0006 (/to-spec)
+- **วันที่**: 2026-10-02
+- **โจทย์ที่ป้อนให้ AI**: สังเคราะห์และสร้างเอกสาร Specification ฉบับสมบูรณ์สำหรับ ADR-0006 (Database-Backed Cart Persistence Over Client-Side LocalStorage)
+- **สิ่งที่ AI นำเสนอ**:
+  - ร่างจุดทดสอบ (Test Seams) ระดับสูงสุดที่จุดเชื่อมต่อ Cart Management Boundary (The Cart Service & Checkout Transaction Seam)
+  - สังเคราะห์ User Stories 15 ข้อ ครอบคลุม Customer, Store Admin, Database Evaluator/อาจารย์, DBA, และ Developer
+  - กำหนด Implementation Decisions เรื่องโครงสร้าง `carts`, `cart_items`, กฎ `UNIQUE (cart_id, book_id)` ป้องกันหนังสือซ้ำ, การทำ `ON DELETE CASCADE`, และกระบวนการย้ายข้อมูลไป `order_items` พร้อมล้างตะกร้าแบบ Atomic
+  - บันทึกเป็นเอกสาร [0006-database-backed-cart-persistence.md](file:///c:/Users/bond/Documents/miniproject-db-e-book/docs/specs/0006-database-backed-cart-persistence.md) ติดป้ายกำกับ `ready-for-agent`
+- **การตัดสินใจของมนุษย์ (Human Decision)**:
+  - ยืนยันความเห็นชอบต่อขอบเขตและ Seams การทดสอบของสเปก
+
+### รอบที่ 12: Feature Specification Synthesis for ADR-0007 (/to-spec)
+- **วันที่**: 2026-10-02
+- **โจทย์ที่ป้อนให้ AI**: สังเคราะห์และสร้างเอกสาร Specification ฉบับสมบูรณ์สำหรับ ADR-0007 (Next.js App Router Architecture with Direct Neon SQL Execution)
+- **สิ่งที่ AI นำเสนอ**:
+  - ร่างจุดทดสอบ (Test Seams) ระดับสูงสุดที่จุดเชื่อมต่อ Server Action & Authentication Session Boundary (The Next.js Application Seam)
+  - สังเคราะห์ User Stories 15 ข้อ ครอบคลุม Customer, Store Admin, Database Evaluator/อาจารย์, Security Auditor, และ Developer
+  - กำหนด Implementation Decisions ครอบคลุมโครงสร้าง 8 หน้าจอหลัก, การทำ Session Cookie พร้อม Demo Account Switcher, การคุ้มครอง Route ผู้ดูแลร้าน, และการรัน Server Actions ด้วย Parameterized SQL
+  - บันทึกเป็นเอกสาร [0007-nextjs-app-router-and-neon-sql.md](file:///c:/Users/bond/Documents/miniproject-db-e-book/docs/specs/0007-nextjs-app-router-and-neon-sql.md) ติดป้ายกำกับ `ready-for-agent`
+- **การตัดสินใจของมนุษย์ (Human Decision)**:
+  - ยืนยันความเห็นชอบต่อขอบเขตและ Seams การทดสอบของสเปก
+
+
+
+
+
+
+
+
+
 
 
