@@ -344,3 +344,14 @@
   - ตรวจสอบความถูกต้องของ Typecheck (`tsc --noEmit`) 0 errors, ชุดทดสอบระบบทั้งหมดรวม 105/105 เคสผ่านฉลุย (`vitest run`), และคอมไพล์ผ่านฉลุยสมบูรณ์แบบทั้งระบบด้วย `next build` (รองรับ Server Components ด้วย `export const dynamic = 'force-dynamic'` ทั้ง 8 core views)
 - **การตัดสินใจของมนุษย์ (Human Decision)**:
   - สั่งเริ่มการอิมพลีเมนต์ตามสเปกและยอมรับผลการตรวจสอบการทำงานทั้งหมด
+
+### รอบที่ 27: Neon Serverless PostgreSQL Provisioning, Schema Migration & Vercel Deployment Setup
+- **วันที่**: 2026-10-02
+- **โจทย์ที่ป้อนให้ AI**: ดำเนินการสร้างฐานข้อมูล Neon PostgreSQL จริงบนคลาวด์ รัน Schema Migration และ Data Seeding พร้อมเตรียมความพร้อมสำหรับการ Deploy บน Vercel
+- **สิ่งที่ AI นำเสนอ**:
+  - Provision โปรเจกต์ Neon PostgreSQL ใหม่ (`miniproject-db-e-book`) ภูมิภาค `aws-ap-southeast-1` (Singapore) อัตโนมัติผ่าน Neon MCP
+  - พัฒนาสคริปต์ [src/db/migrate-and-seed.ts](file:///c:/Users/bond/Documents/miniproject-db-e-book/src/db/migrate-and-seed.ts) เพื่อรัน [src/db/schema.sql](file:///c:/Users/bond/Documents/miniproject-db-e-book/src/db/schema.sql) และ Mock ข้อมูลเริ่มต้นครบทุกตาราง (Users, Books, Junctions, Orders, Payments, Download Tokens)
+  - ทดสอบเชื่อมต่อและ Query ข้อมูลจริงจาก Next.js Server Components พบว่าตอบกลับ 200 OK ทุกเส้นทาง (`/`, `/admin/analytics`)
+  - จัดเตรียม [.env.example](file:///c:/Users/bond/Documents/miniproject-db-e-book/.env.example) และ Push โค้ดทั้งหมดขึ้น GitHub Main Branch พร้อมสำหรับการเชื่อมต่อ Vercel
+- **การตัดสินใจของมนุษย์ (Human Decision)**:
+  - เลือกให้ AI ดำเนินการสร้าง Neon Project อัตโนมัติ และสั่งเตรียมขั้นตอนการเชื่อมต่อ Vercel
