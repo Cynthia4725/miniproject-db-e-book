@@ -67,7 +67,7 @@ export default async function AdminOrdersPage() {
               </thead>
               <tbody className="divide-y divide-slate-100 text-slate-700">
                 {pendingOrders.map((order) => (
-                  <tr key={order.order_id} className="hover:bg-slate-50/80 transition-colors">
+                  <tr key={order.payment_id} className="hover:bg-slate-50/80 transition-colors">
                     <td className="py-3 px-4 font-mono font-bold text-slate-900">
                       {order.order_number}
                     </td>
@@ -83,6 +83,7 @@ export default async function AdminOrdersPage() {
                         href={order.slip_image_url}
                         target="_blank"
                         rel="noopener noreferrer"
+                        suppressHydrationWarning
                         className="inline-flex items-center gap-1 text-emerald-600 hover:text-emerald-800 underline font-medium"
                       >
                         <span>🧾 ดูสลิป</span>

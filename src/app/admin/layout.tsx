@@ -42,21 +42,24 @@ export default async function AdminLayout({
           </h1>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2" suppressHydrationWarning>
           <Link
             href="/admin/orders"
+            suppressHydrationWarning
             className="px-3 py-1.5 rounded-lg border border-slate-200 hover:border-amber-500 hover:text-amber-700 text-xs font-semibold text-slate-700 transition-colors"
           >
             📥 คิวตรวจสลิป (Orders)
           </Link>
           <Link
             href="/admin/books"
+            suppressHydrationWarning
             className="px-3 py-1.5 rounded-lg border border-slate-200 hover:border-amber-500 hover:text-amber-700 text-xs font-semibold text-slate-700 transition-colors"
           >
             📚 แคตตาล็อก (Books)
           </Link>
           <Link
             href="/admin/analytics"
+            suppressHydrationWarning
             className="px-3 py-1.5 rounded-lg border border-slate-200 hover:border-amber-500 hover:text-amber-700 text-xs font-semibold text-slate-700 transition-colors"
           >
             📊 รายงาน 5 มิติ (Analytics)
