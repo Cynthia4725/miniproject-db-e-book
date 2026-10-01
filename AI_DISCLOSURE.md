@@ -57,4 +57,18 @@
 - **การตัดสินใจของมนุษย์ (Human Decision)**:
   - อนุมัติตามคำแนะนำทั้งหมด มุ่งเน้นความน่าเชื่อถือของการสาธิตและคุณภาพของข้อมูลเชิงวิเคราะห์
 
+### รอบที่ 4: Architectural Decision Records (ADRs) & Domain Refinement (/grill-with-docs)
+- **วันที่**: 2026-10-01
+- **โจทย์ที่ป้อนให้ AI**: ทบทวนและสร้างเอกสาร Architecture Decision Records (ADRs) ให้ครบถ้วน เพื่อบันทึกเหตุผลการตัดสินใจทางสถาปัตยกรรม (Architectural Trade-offs) และปรับปรุง GLOSSARY.md ให้กระชับตามหลัก Domain Modeling
+- **สิ่งที่ AI นำเสนอ**:
+  - รีแฟกเตอร์ [GLOSSARY.md](file:///c:/Users/bond/Documents/miniproject-db-e-book/GLOSSARY.md) โดยตัด Implementation details ออก และระบุคำนิยามพร้อม `_Avoid_`
+  - เสนอและร่าง ADR เพิ่มเติม 4 ฉบับ:
+    - [ADR 0003](file:///c:/Users/bond/Documents/miniproject-db-e-book/docs/adr/0003-neon-serverless-postgresql.md): การเลือกใช้ Neon Serverless PostgreSQL + Direct SQL Query (ไม่ใช้ Heavy ORM)
+    - [ADR 0004](file:///c:/Users/bond/Documents/miniproject-db-e-book/docs/adr/0004-relational-junction-tables-over-jsonb.md): การใช้ Junction Table ตามกฎ 3NF แทน Native Postgres JSONB/Array
+    - [ADR 0005](file:///c:/Users/bond/Documents/miniproject-db-e-book/docs/adr/0005-zero-external-dependency-asset-delivery.md): กลยุทธ์การส่งมอบไฟล์แบบ Zero External Dependency สำหรับ Live Demo
+    - [ADR 0006](file:///c:/Users/bond/Documents/miniproject-db-e-book/docs/adr/0006-database-backed-cart-persistence.md): การใช้ Database-backed Cart แทน Browser LocalStorage
+- **การตัดสินใจของมนุษย์ (Human Decision)**:
+  - อนุมัติการบันทึก ADR ทั้งหมด 6 ฉบับอย่างเป็นทางการ
+
+
 
