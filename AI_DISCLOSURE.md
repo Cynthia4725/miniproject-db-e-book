@@ -380,3 +380,14 @@
   - ผลลัพธ์: ทุก Route (`/`, `/cart`, `/library`, `/books/[id]`, `/orders/[order_number]/pay`, `/admin/*`) ตอบกลับ 200 OK ราบรื่น ไม่พบ Webpack TypeError ใดๆ
 - **การตัดสินใจของมนุษย์ (Human Decision)**:
   - แจ้งรายงานบั๊ก Runtime TypeError และยอมรับการปรับปรุงโครงสร้าง Server Actions ของ AI
+
+### รอบที่ 30: Fixing Users Table Column Reference in Admin Verification Queue
+- **วันที่**: 2026-10-02
+- **โจทย์ที่ป้อนให้ AI**: แก้ไข Error `Runtime AppError: column u.name does not exist` ในหน้า [src/app/admin/orders/page.tsx](file:///c:/Users/bond/Documents/miniproject-db-e-book/src/app/admin/orders/page.tsx)
+- **สิ่งที่ AI นำเสนอ**:
+  - ตรวจสอบโครงสร้างตาราง `users` ใน [src/db/schema.sql](file:///c:/Users/bond/Documents/miniproject-db-e-book/src/db/schema.sql) พบว่าชื่อคอลัมน์ที่แท้จริงคือ `full_name` ไม่ใช่ `name`
+  - แก้ไข SQL Query ใน [src/app/admin/orders/page.tsx](file:///c:/Users/bond/Documents/miniproject-db-e-book/src/app/admin/orders/page.tsx) จาก `u.name AS user_name` เป็น `u.full_name AS user_name`
+  - ทดสอบ Query บนฐานข้อมูล Neon จริง พบรายการคำสั่งซื้อค้างตรวจ 3 รายการพร้อมชื่อสมชาย ใจดี ถูกต้องสมบูรณ์
+  - ทดสอบยิง Request หน้า `/admin/orders` ด้วย Session Cookie แอดมิน พบสถานะตอบกลับ 200 OK
+- **การตัดสินใจของมนุษย์ (Human Decision)**:
+  - แจ้ง Error และยอมรับการแก้ไขชื่อคอลัมน์ให้ตรงกับ 3NF Relational Schema
